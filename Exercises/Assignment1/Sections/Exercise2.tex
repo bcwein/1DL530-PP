@@ -1,0 +1,99 @@
+\section{Shared-Memory Concurrency}
+
+We have, as stated in the assignment desctiption, three threads that 
+operate on a shared integer variable named \textbf{x}
+
+The first thread \textbf{t1} operates the following code
+
+\begin{lstlisting}[language=C++, caption=Thread 1 source code]
+void inc()
+{
+  bool r = true;
+  while (r)
+    {
+      mutex.lock();
+      ++x;
+      r = run;
+      mutex.unlock();
+    }
+}
+\end{lstlisting}
+
+This thread runs an 'infinite' loop on the boolean variable \textit{r} which is
+true until the boolean value r is equal to \textit{run}, which we will see later
+in the main function. Thread 1 raises it mutual exclusion flag before it increments
+\textit{x} and assigns \textit{run} to \textit{r} before it lowers its flag.
+
+The second thread \textbf{t2} operates the following code
+
+\begin{lstlisting}[language=C++, caption=Thread 2 source code]
+void dec()
+{
+  bool r = true;
+  while (r)
+    {
+      mutex.lock();
+      --x;
+      r = run;
+      mutex.unlock();
+    }
+}
+\end{lstlisting}
+This thread does the same thing as \textit{t1} but opposite. It loops infinitely
+and raises it flag when decrementing \textit{x} and assigning \textit{run} to 
+\textit{r}.  
+
+The last thread \textbf{t3} operates the following code
+
+\begin{lstlisting}[language=C++, caption=Thread 3 source code]
+void print()
+{
+  bool r = true;
+  while (r)
+    {
+      mutex.lock();
+      std::cout << x << std::endl;
+      r = run;
+      mutex.unlock();
+    }
+}
+\end{lstlisting}
+
+This thread also loops infinitely on \textit{r} until that gets assigned false
+by \textit{run}. It raises its mutual exclusion flag before outputting the value
+of \textit{x} and when assigning \textit{run} to \textit{r}.
+
+Lastly, lets see the main method, how it uses these threads and what we would
+expect as output. 
+
+\begin{lstlisting}[language=C++, caption=Main method]
+int main()
+{
+  std::thread t1(inc);
+  std::thread t2(dec);
+  std::thread t3(print);
+
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+
+  mutex.lock();
+  run = false;
+  mutex.unlock();
+
+  t1.join();
+  t2.join();
+  t3.join();
+
+  return 0;
+}
+\end{lstlisting}
+
+We see that the threads are started and the program sleeps for 1 second.
+In that time, all three threads are operating on the same shared variable. Given
+Given how the mutual exclusion flags are handled. When one thread loops another
+thread may be given access to the variable. Since the order of what threads will
+get access and for what time during the second of sleep is non-deterministic, the
+variable \textit{x} should also have a non-deterministic value when outputted.
+
+After five trial runs, the last outputted value of x was: $57031$, $-44762$, 
+$-45637$, $220150$ and $11428$. So we see that the final value of x can be 
+considered stochastic and non-deterministic. 

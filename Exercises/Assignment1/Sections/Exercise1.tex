@@ -1,0 +1,81 @@
+\section{Concurrency and Non-Determinism}
+
+The code provided on studium is shown below
+
+\begin{lstlisting}[language=C++, caption=non-determinism.cpp]
+#include <iostream>
+#include <mutex>
+#include <thread>
+
+
+std::mutex mutex;
+
+void loop(int n)
+{
+  mutex.lock();
+  std::cout << "Task " << n << " is running." << std::endl;
+  mutex.unlock();
+
+  mutex.lock();
+  std::cout << "Task " << n << " is terminating." << std::endl;
+  mutex.unlock();
+}
+
+int main()
+{
+  std::thread t1(loop, 1);
+  std::thread t2(loop, 2);
+  std::thread t3(loop, 3);
+  std::thread t4(loop, 4);
+  std::thread t5(loop, 5);
+  std::thread t6(loop, 6);
+  std::thread t7(loop, 7);
+  std::thread t8(loop, 8);
+
+  t1.join();
+  t2.join();
+  t3.join();
+  t4.join();
+  t5.join();
+  t6.join();
+  t7.join();
+  t8.join();
+
+  return 0;
+}
+\end{lstlisting}
+
+And when we compile this program as told in the exercise, we get an output
+similar to this:
+
+\begin{lstlisting}
+Task 1 is running.
+Task 3 is running.
+Task 3 is terminating.
+Task 1 is terminating.
+Task 4 is running.
+Task 5 is running.
+Task 6 is running.
+Task 7 is running.
+Task 7 is terminating.
+Task 5 is terminating.
+Task 4 is terminating.
+Task 6 is terminating.
+Task 2 is running.
+Task 2 is terminating.
+Task 8 is running.
+Task 8 is terminating.
+\end{lstlisting}
+
+But exactly what tasks starts runnning and terminating in what order is
+observed to be stochastic. This is known as \textbf{non-determinism} that is 
+known to arise when we have concurrent programs. In the observed output which 
+task that will start to run and in what order is random. The non-determinism
+of concurrent programs is important to take into account as this could lead to
+the final output also becoming non-deterministic. Therefore we need mutual 
+exclusion flags to ensure that the concurrent program outputs the correct solution
+for the problem that it is solving. In the program above this mutual exlustion
+flag is raised when outputting that a task is running and when it is terminating.
+Mutual exlusion flags solves some problems but will also lead to other problems
+which we will see later.
+
