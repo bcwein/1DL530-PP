@@ -1,0 +1,23 @@
+\section{Race Conditions and Data Races}
+
+A race condition occurs when a program depends on the timing of one or more
+processes to function correctly. A data race is a special case of race condition
+where a shared variable is being operated on by several threads. The first 
+program \textit{non-determinism.cpp} could potentially produce a race condition and
+the second program \textit{shared-variable.cpp} could produce a data race.
+
+This depends on the desired operation of the above mentioned programs. The
+first thread reports which task is running and terminating in what order. Since 
+the print statements are in mutual exclusive sections a error in the print 
+statement will not happen. Because of that i do not consider 
+\textit{non-determinism.cpp} to produce a race condition. If these mutual exlusive 
+sections were not implemented, another thread could take over before in the time 
+that the print is finished and a race condition is produced.
+
+The second program, \textit{shared-variable.cpp} does produce different outputs
+dependent on the sequence of execution on the threads but i consider that to be 
+a part of the operation of the program to demonstrate how the access of the threads
+is random for each time the program is ran. The operations on 
+the shared variable are atomic and will not produce errors and invalid output
+that does not reflect the behaviour of the program. I therefore do not consider
+\textit{shared-variable.cpp} to produce a data race.
