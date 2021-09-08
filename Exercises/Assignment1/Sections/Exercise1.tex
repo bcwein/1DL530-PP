@@ -73,8 +73,8 @@ known to arise when we have concurrent programs. The non-determinism
 of concurrent programs is important to take into account as this could lead to
 the final output also becoming non-deterministic. Therefore we need mutual 
 exclusion flags to ensure that the concurrent program outputs the correct solution
-for the problem that it is solving. In the program above this mutual exlustion
+for the problem that it is solving. In the program above this mutual exclusion
 flag is raised when outputting that a task is running and when it is terminating.
-Mutual exlusion flags solves some problems but will also lead to other problems
+Mutual exclusion flags solves some problems but will also lead to other problems
 which we will see later. Due to the problems discussed above, the exact output
 is undefined and we could see other orders printed out.
