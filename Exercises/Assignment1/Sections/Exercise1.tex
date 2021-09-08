@@ -69,13 +69,12 @@ Task 8 is terminating.
 
 But exactly what tasks starts runnning and terminating in what order is
 observed to be stochastic. This is known as \textbf{non-determinism} that is 
-known to arise when we have concurrent programs. In the observed output which 
-task that will start to run and in what order is random. The non-determinism
+known to arise when we have concurrent programs. The non-determinism
 of concurrent programs is important to take into account as this could lead to
 the final output also becoming non-deterministic. Therefore we need mutual 
 exclusion flags to ensure that the concurrent program outputs the correct solution
 for the problem that it is solving. In the program above this mutual exlustion
 flag is raised when outputting that a task is running and when it is terminating.
 Mutual exlusion flags solves some problems but will also lead to other problems
-which we will see later.
-
+which we will see later. Due to the problems discussed above, the exact output
+is undefined and we could see other orders printed out.

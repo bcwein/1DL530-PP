@@ -1,0 +1,55 @@
+\section{Dining Philosophers}
+
+Dining philosophers is a known example problem in computer science formulated
+by Edsger Dijkstra in 1965 to illustrate a problem that can arise from concurrent
+programs. In the assignment there has been provided a program which simulates
+the dining philosophers problem. After compilation and a few trial runs we get
+a output similar to this which halts:
+
+\begin{lstlisting}[caption=Output from the dining philosophers program.]
+Philosopher 0 is thinking.
+Philosopher 0 picked up her left fork.
+Philosopher 0 picked up her right fork.
+Philosopher 0 is eating.
+Philosopher 0 is putting down her right fork.
+Philosopher 0 is putting down her left fork.
+Philosopher 0 is thinking.
+Philosopher 0 picked up her left fork.
+Philosopher 0 picked up her right fork.
+Philosopher 0 is eating.
+Philosopher 0 is putting down her right fork.
+Philosopher 0 is putting down her left fork.
+Philosopher 0 is thinking.
+Philosopher 0 picked up her left fork.
+Philosopher 0 picked up her right fork.
+Philosopher 0 is eating.
+Philosopher 1 is thinking.
+Philosopher 0 is putting down her right fork.
+Philosopher 0 is putting down her left fork.
+Philosopher 0 is thinking.
+Philosopher 0 picked up her left fork.
+Philosopher 1 picked up her left fork.
+\end{lstlisting}
+
+The program above had two philosophers and two forks. What has happened is that 
+philosopher 0 picks up her left fork and philosopher 1 picks up her left fork.
+This means that both philosophers are at step 2 and will wait indefinitely for
+the other to put down their fork. This means that we have a deadlock, a state in 
+which each member waits for the other member, including itsef, to take action.
+
+To solve the dining philosophers problem, we have implemented the Arbitrator 
+solution. This means that we introduced a mutex that can be thought of as a 
+waiter that does not allow a philosopher to pick up both forks or none. This 
+comes at the cost of lost parallellism as well as adding a new mutex.
+
+The change that we did is shown in the listing below:
+
+\begin{lstlisting}[language=C++, caption=Arbitrator/Waiter code modification]
+    arbitrator.lock();
+    left->lock();
+    std::cout << "Philosopher " << n << " picked up her left fork." << std::endl;
+
+    right->lock();
+    std::cout << "Philosopher " << n << " picked up her right fork." << std::endl;
+    arbitrator.unlock();
+\end{lstlisting}

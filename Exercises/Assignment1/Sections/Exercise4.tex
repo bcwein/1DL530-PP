@@ -31,26 +31,33 @@ NUMA node2 CPU(s):     16-23
 NUMA node3 CPU(s):     24-31
 \end{lstlisting}
 
-We see that 32 logical CPU cores and this is shared across 2 physical CPUs with
-8 cores each which are dual threaded. Resulting in $2 \times 8 \times 2 = 32$.
+Based on the output above it seems that the CPU has dualthreaded cores and 8 
+cores per cpu. With our two physical cpus this would make 16 cores and 32 virtual
+CPUs. But this is an AMD processor and the architecture is a bit different than
+it first seems. According to \href{https://www.cpu-world.com/CPUs/Bulldozer/AMD-Opteron%206274%20OS6274WKTGGGU.html}{cpu-world.com}
+the CPU actually has 16 physical cores. It has L1 data caches for each core, and 
+shared instruction caches for every two cores. The L2 cache is shared between 
+two cores as well. L3 Cache is shared among 8 cores. See figure \ref{fig:amd}
+for a visual illustration of a single AMD Opetron 6274.
 
 \begin{figure}
     \centering
+    \label{fig:amd}
     \includegraphics[width=\linewidth]{Figures/datahierarchy.PNG}
-    \caption{Cache Hierarchy of AMD Opteron Processor 6274 om gullviva.it.uu.se}
+    \caption{Cache Hierarchy of AMD Opteron Processor 6274 on gullviva.it.uu.se}
 \end{figure}
 
 We see that this processor has a lot more physical cores. In summary we have:
 
 \begin{itemize}
-    \item There are in total 2 physical CPUs. Each with 8 physical cores.
-    \item Each physical core has two logical CPUs.
-    \item Each physical core has an L1d, L1i and L2 cache of sizes 16, 64, AND 2048KB respectively.
-    \item Four physical cores share one L3 cache of size 6144KB.
+    \item There are in total 2 physical CPUs. Each with 16 physical cores.
+    \item Each physical core has an L1d of 16KB
+    \item There is an L1i Cache of 64KB for every two cores. 
+    \item There is a L2 Cache of 2048KB for every two cores.
+    \item Eight physical cores share one L3 cache of size 6144KB.
 \end{itemize}
 
-We see that the caches are somewhat similar. The L2 cache fo each physical core
-have more memory compared to the Intel I5-450M processors. The L3 cache is also 
-larger but share 4 physical cores instead of 2. The main difference is that 
-there are a lot more physical and logical cores, which will allow for concurrent
-multithreaded programming.
+Compared with the Intel cpu the cache levels are the same. The memory split
+is what is the main different between the two cpus. There are more physical
+cores in the AMD cpu but the instruction memory is shared between the cores. 
+The CPU we are using also has a lot more cores than the intel CPU.

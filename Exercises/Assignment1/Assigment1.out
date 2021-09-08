@@ -1,0 +1,10 @@
+\BOOKMARK [1][-]{section.1}{Concurrency and Non-Determinism}{}% 1
+\BOOKMARK [1][-]{section.2}{Shared-Memory Concurrency}{}% 2
+\BOOKMARK [1][-]{section.3}{Race Conditions and Data Races}{}% 3
+\BOOKMARK [1][-]{section.4}{Multicore Architectures}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Explore the CPU}{section.4}% 5
+\BOOKMARK [1][-]{section.5}{Performance Measurements}{}% 6
+\BOOKMARK [2][-]{subsection.5.1}{Runtimes}{section.5}% 7
+\BOOKMARK [2][-]{subsection.5.2}{Plotted graph}{section.5}% 8
+\BOOKMARK [2][-]{subsection.5.3}{Discussion and explanation}{section.5}% 9
+\BOOKMARK [1][-]{section.6}{Dining Philosophers}{}% 10
