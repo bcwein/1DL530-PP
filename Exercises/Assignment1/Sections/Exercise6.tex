@@ -44,7 +44,7 @@ and tries again during the next cycle.
 The change that we did is shown in the listing below:
 
 \begin{lstlisting}[language=C++, caption=Arbitrator/Waiter code modification]
-    void philosopher(int n, std::mutex *left, std::mutex *right)
+void philosopher(int n, std::mutex *left, std::mutex *right)
     {
       while (true)
       {
