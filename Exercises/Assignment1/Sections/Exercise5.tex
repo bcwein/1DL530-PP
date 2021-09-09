@@ -2,7 +2,7 @@
 
 Script used to run program is shown in listing \ref{listing:script}.
 
-\begin{lstlisting}[language=bash, caption=Bash script to try all values of $T$ and $N$]
+\begin{lstlisting}[language=bash, caption=Bash script to try all values of $T$ and $N$, label=listing:script]
 #!/bin/bash
 
 set +e
@@ -16,12 +16,11 @@ for t in {1,2,4,8,16,32}; do
     ./performance $t $n >> results.txt
     done
 done
-\end{lstlisting}\label{listing:script}
+\end{lstlisting}
 
-\subsection{Runtimes} 
-The reported run times is shown in listing \ref{listing:runtimes}.
+\subsection{Runtimes}
 
-\begin{lstlisting}[caption=Reported runtimes for all values of $T$ and $N$]
+\begin{lstlisting}[caption=Reported runtimes for all values of $T$ and $N$], label=listing:runtimes]
 (1,1)
 Finished in 1.21908 seconds (wall clock).
 (1,2)
@@ -94,18 +93,18 @@ Finished in 0.298942 seconds (wall clock).
 Finished in 0.592317 seconds (wall clock).
 (32,32)
 Finished in 1.18443 seconds (wall clock).
-\end{lstlisting}\label{listing:runtimes}
+\end{lstlisting}
 
 \subsection{Plotted graph}
 
 The plotted times on threads, size of array and its affect on time is shown In
 figure \ref{fig:threasizetime}
 
-\begin{figure}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\linewidth]{Figures/graph.png}
-    \label{fig:threasizetime}
     \caption{Threads and array size vs time.}
+    \label{fig:threasizetime}
 \end{figure}
 
 \subsection{Discussion and explanation} 
