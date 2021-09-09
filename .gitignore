@@ -1,6 +1,7 @@
-Exercises/Assignment1/Assigment1.aux
-Exercises/Assignment1/Assigment1.fdb_latexmk
-Exercises/Assignment1/Assigment1.fls
-Exercises/Assignment1/Assigment1.log
-Exercises/Assignment1/Assigment1.synctex.gz
-Exercises/Assignment1/Assigment1.out
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.out
+*.out
