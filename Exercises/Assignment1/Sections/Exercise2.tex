@@ -1,6 +1,6 @@
 \section{Shared-Memory Concurrency}
 
-We have, as stated in the assignment desctiption, three threads that 
+We have, as stated in the assignment description, three threads that 
 operate on a shared integer variable named \textbf{x}
 
 The first thread \textbf{t1} operates the following code
@@ -88,8 +88,8 @@ int main()
 \end{lstlisting}
 
 We see that the threads are started and the program sleeps for 1 second.
-In that time, all three threads are operating on the same shared variable. Given
-Given how the mutual exclusion flags are handled. When one thread loops another
+In that time, all three threads are operating on the same shared variable.
+Given how the mutual exclusion flags are handled, when one thread loops, another
 thread may be given access to the variable. Since the order of what threads will
 get access and for what time during the second of sleep is non-deterministic, the
 variable \textit{x} should also have a non-deterministic value when outputted.

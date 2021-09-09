@@ -11,7 +11,7 @@ The second program, \textit{shared-variable.cpp} does produce different outputs
 dependent on the sequence of execution on the threads and we therefore
 have a race condition. The operations on the shared variable are atomic and 
 therefore the program does not have a data race on the shared variable.
-This has been verified by compling the program with 'fsanitize=thread' and 
+This has been verified by compiling the program with 'fsanitize=thread' and 
 running it.
 
 In summary: Both programs are examples of race conditions, none of them are 
