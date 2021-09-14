@@ -7,7 +7,7 @@
 using namespace std;
 
 int numThreads, numTrapezes, numTrapPerThread;
-double a = 0, b = 1, results;
+double a = 0, b = 1, w, results;
 
 pthread_mutex_t results_mutex;
 
@@ -16,14 +16,20 @@ double function(double x)
   return 4 / (1 + (x * x));
 }
 
-void *calculateFactorial(void *n)
+void *calculateFactorial(void *index)
 {
+
   double localResults;
-  int startI = *(int *)n;
-  double w = (b - a) / numTrapezes;
+  long startI = (long)index;
+
   for (int i = 0; i < numTrapPerThread; i++)
   {
-    localResults = localResults + 2 * function(a + (i * w));
+    int pos = startI * numTrapPerThread + i;
+    if (pos == 0 || pos == numTrapezes)
+    {
+      continue;
+    }
+    localResults = localResults + 2 * function(a + ((pos)*w));
   }
 
   pthread_mutex_lock(&results_mutex);
@@ -36,17 +42,16 @@ void *calculateFactorial(void *n)
 int getAnswer(int numThreads, int numTrapezes)
 {
   numTrapPerThread = numTrapezes / numThreads;
+  w = (b - a) / numTrapezes;
 
   pthread_t threads[numThreads];
   pthread_mutex_init(&results_mutex, NULL);
 
-  for (int i = 0; i < numThreads - 1; i++)
+  long i;
+  for (i = 0; i < numThreads; i++)
   {
-    pthread_create(&threads[i], NULL, calculateFactorial, (void *)&numTrapPerThread);
+    pthread_create(&threads[i], NULL, calculateFactorial, (void *)i);
   }
-  // Spin-up the last thread which takes on the same amount of jobs + remainder
-  int finalAmountOfTrap = numTrapPerThread + numTrapezes % numThreads;
-  pthread_create(&threads[numThreads - 1], NULL, calculateFactorial, (void *)&finalAmountOfTrap);
 
   for (int j = 0; j < numThreads; j++)
   {
@@ -54,7 +59,7 @@ int getAnswer(int numThreads, int numTrapezes)
   }
 
   double total = (((b - a) / numTrapezes) / 2) * (function(a) + results + function(b));
-  cout << fixed << setprecision(20) << total;
+  cout << fixed << setprecision(15) << total;
   return 0;
 }
 
