@@ -3,7 +3,7 @@
 #
 
 all: ${PROG}
-	g++ -std=c++11 -Wall ${PROG}.cpp -o ${PROG}
+	g++ -std=c++11 -pthread -Wall ${PROG}.cpp -o ${PROG}
 
 clean:
 	$(RM) ${PROG}
