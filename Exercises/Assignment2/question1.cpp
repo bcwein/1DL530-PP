@@ -3,6 +3,7 @@
 #include <vector>
 #include <iomanip>
 #include <pthread.h>
+#include <chrono>
 
 using namespace std;
 
@@ -61,8 +62,8 @@ int getAnswer(int numThreads, int numTrapezes)
   pthread_t threads[numThreads];
   pthread_mutex_init(&results_mutex, NULL);
 
-  long i;
-  for (i = 0; i < numThreads; i++)
+  auto begin_time = chrono::high_resolution_clock::now();
+  for (int i = 0; i < numThreads; i++)
   {
     cfg = (Config *)malloc(sizeof(struct Config));
     cfg->startI = i;
@@ -76,7 +77,10 @@ int getAnswer(int numThreads, int numTrapezes)
   }
 
   double total = (((b - a) / numTrapezes) / 2) * (function(a) + results + function(b));
-  cout << fixed << setprecision(25) << total;
+  auto end_time = std::chrono::high_resolution_clock::now();
+
+  cout << "result: " << fixed << setprecision(25) << total << "\n";
+  cout << "time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   return 0;
 }
 
