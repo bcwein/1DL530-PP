@@ -1,11 +1,16 @@
 # Q1 results
 
-- Table can be found at table.png
+- Graphs:
+  - lowTrap.png
+  - medTrap.png
+  - highTrap.png
+- Output table - table.png
 - Results can be found at results.txt
 
 # b)
 
-As threads increase, time to calculate decreased for the same amount of trapezes.
+As threads increased for low amount of trapezes, the time to compute actually increases. This is due to the overhead that parallelisation adds to the application (thread-creation, waiting on threads to complete and lock-waits). 
+However as we reach medium amount of trapezes (1000000) or high (1000000000) we see that the time decreases significantly as at this point the cost to parallelize is less than the benefit it offers.
 While the number of trapezes increase, so too did the accuracy of the result.
 
 # c)
