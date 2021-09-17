@@ -3,11 +3,18 @@
 #include <vector>
 #include <iomanip>
 #include <pthread.h>
+#include <chrono>
 
 using namespace std;
 
-int numThreads, numTrapezes, numTrapPerThread;
+int numThreads, numTrapezes;
 double a = 0, b = 1, w, results;
+
+struct Config
+{
+  int startI;
+  int numTrapPerThread;
+} * cfg;
 
 pthread_mutex_t results_mutex;
 
@@ -16,15 +23,14 @@ double function(double x)
   return 4 / (1 + (x * x));
 }
 
-void *calculateFactorial(void *index)
+void *calculateFactorial(void *conf)
 {
-
+  Config *cfg = (Config *)conf;
   double localResults;
-  long startI = (long)index;
 
-  for (int i = 0; i < numTrapPerThread; i++)
+  for (int i = 0; i < cfg->numTrapPerThread; i++)
   {
-    int pos = startI * numTrapPerThread + i;
+    int pos = cfg->startI * cfg->numTrapPerThread + i;
     if (pos == 0 || pos == numTrapezes)
     {
       continue;
@@ -39,18 +45,30 @@ void *calculateFactorial(void *index)
   pthread_exit(0);
 }
 
+int getNumTrapPerThread(int i, int numThreads, int numTrapezes)
+{
+  // Add surplus trapezes to the last thread
+  if (i == numThreads - 1)
+  {
+    return (numTrapezes / numThreads) + (numTrapezes % numThreads);
+  }
+  return numTrapezes / numThreads;
+}
+
 int getAnswer(int numThreads, int numTrapezes)
 {
-  numTrapPerThread = numTrapezes / numThreads;
   w = (b - a) / numTrapezes;
 
   pthread_t threads[numThreads];
   pthread_mutex_init(&results_mutex, NULL);
 
-  long i;
-  for (i = 0; i < numThreads; i++)
+  auto begin_time = chrono::high_resolution_clock::now();
+  for (int i = 0; i < numThreads; i++)
   {
-    pthread_create(&threads[i], NULL, calculateFactorial, (void *)i);
+    cfg = (Config *)malloc(sizeof(struct Config));
+    cfg->startI = i;
+    cfg->numTrapPerThread = getNumTrapPerThread(i, numThreads, numTrapezes);
+    pthread_create(&threads[i], NULL, calculateFactorial, (void *)cfg);
   }
 
   for (int j = 0; j < numThreads; j++)
@@ -59,7 +77,10 @@ int getAnswer(int numThreads, int numTrapezes)
   }
 
   double total = (((b - a) / numTrapezes) / 2) * (function(a) + results + function(b));
-  cout << fixed << setprecision(15) << total;
+  auto end_time = std::chrono::high_resolution_clock::now();
+
+  cout << "result: " << fixed << setprecision(25) << total << "\n";
+  cout << "time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   return 0;
 }
 
