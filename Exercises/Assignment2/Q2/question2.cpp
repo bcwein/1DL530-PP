@@ -11,106 +11,113 @@ using namespace std;
 int numThreads;
 int *results;
 long long maxNumber;
-double a = 0, b = 1, w, results;
+// double a = 0, b = 1, w, results;
 
-struct Config
-{
-  int startI;
-  int numTrapPerThread;
-} * cfg;
+// struct Config
+// {
+//   int startI;
+//   int numTrapPerThread;
+// } * cfg;
 
 pthread_mutex_t results_mutex;
 
-double function(double x)
+// double function(double x)
+// {
+//   return 4 / (1 + (x * x));
+// }
+
+// void *calculateFactorial(void *conf)
+// {
+//   Config *cfg = (Config *)conf;
+//   double localResults;
+
+//   for (int i = 0; i < cfg->numTrapPerThread; i++)
+//   {
+//     int pos = cfg->startI * cfg->numTrapPerThread + i;
+//     if (pos == 0 || pos == maxNumber)
+//     {
+//       continue;
+//     }
+//     localResults = localResults + 2 * function(a + ((pos)*w));
+//   }
+
+//   pthread_mutex_lock(&results_mutex);
+//   results += localResults;
+//   pthread_mutex_unlock(&results_mutex);
+
+//   pthread_exit(0);
+// }
+
+// int getNumTrapPerThread(int i, int numThreads, int maxNumber)
+// {
+//   // Add surplus to the last thread
+//   if (i == numThreads - 1)
+//   {
+//     return (maxNumber / numThreads) + (maxNumber % numThreads);
+//   }
+//   return maxNumber / numThreads;
+// }
+
+int *markNonPrimes(int startNumber, int maxNumber)
 {
-  return 4 / (1 + (x * x));
-}
-
-void *calculateFactorial(void *conf)
-{
-  Config *cfg = (Config *)conf;
-  double localResults;
-
-  for (int i = 0; i < cfg->numTrapPerThread; i++)
-  {
-    int pos = cfg->startI * cfg->numTrapPerThread + i;
-    if (pos == 0 || pos == maxNumber)
-    {
-      continue;
-    }
-    localResults = localResults + 2 * function(a + ((pos)*w));
-  }
-
-  pthread_mutex_lock(&results_mutex);
-  results += localResults;
-  pthread_mutex_unlock(&results_mutex);
-
-  pthread_exit(0);
-}
-
-int getNumTrapPerThread(int i, int numThreads, int maxNumber)
-{
-  // Add surplus to the last thread
-  if (i == numThreads - 1)
-  {
-    return (maxNumber / numThreads) + (maxNumber % numThreads);
-  }
-  return maxNumber / numThreads;
-}
-
-void markNonPrimes(int startNumber, int maxNumber)
-{
-  for (; startNumber < maxNumber; startNumber++)
+  for (; startNumber <= maxNumber; startNumber++)
   {
     // TODO:add a read mutex here
     if (results[startNumber] == 1)
     {
       continue;
     }
-    int numberSqrd = startNumber * startNumber;
-    int multiple = 1;
-    while (multiple * numberSqrd < maxNumber)
+    int multiple = 2;
+    while (multiple * startNumber <= maxNumber)
     {
       // TODO:add a write mutex here
-      results[numberSqrd - 1] = 1;
+      results[multiple * startNumber] = 1;
       multiple++;
     }
   }
+  return results;
 }
 
 int getAnswer(int numThreads, int maxNumber)
 {
-  results[maxNumber] = {0};
+  results = (int *)malloc(sizeof(int) * maxNumber + 1);
 
   pthread_t threads[numThreads];
   pthread_mutex_init(&results_mutex, NULL);
 
   auto begin_time = chrono::high_resolution_clock::now();
 
-  results[0] = 1;
   results[1] = 1;
 
   int init = int(floor(sqrt(maxNumber)));
-  markNonPrimes(2, init);
+  markNonPrimes(2, maxNumber);
 
-  for (int i = 0; i < numThreads; i++)
-  {
-    cfg = (Config *)malloc(sizeof(struct Config));
-    cfg->startI = i;
-    cfg->numTrapPerThread = getNumTrapPerThread(i, numThreads, maxNumber);
-    pthread_create(&threads[i], NULL, calculateFactorial, (void *)cfg);
-  }
+  // for (int i = 0; i < numThreads; i++)
+  // {
+  //   cfg = (Config *)malloc(sizeof(struct Config));
+  //   cfg->startI = i;
+  //   cfg->numTrapPerThread = getNumTrapPerThread(i, numThreads, maxNumber);
+  //   pthread_create(&threads[i], NULL, calculateFactorial, (void *)cfg);
+  // }
 
-  for (int j = 0; j < numThreads; j++)
-  {
-    pthread_join(threads[j], NULL);
-  }
+  // for (int j = 0; j < numThreads; j++)
+  // {
+  //   pthread_join(threads[j], NULL);
+  // }
 
-  double total = (((b - a) / maxNumber) / 2) * (function(a) + results + function(b));
+  // double total = (((b - a) / maxNumber) / 2) * (function(a) + results + function(b));
   auto end_time = std::chrono::high_resolution_clock::now();
 
-  cout << "result: " << fixed << setprecision(25) << total << "\n";
-  cout << "time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
+  cout << "results: ";
+  for (int i = 1; i <= maxNumber; i++)
+  {
+    if (results[i] == 0)
+    {
+      cout << i << ", ";
+    }
+  }
+  cout << "\n time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
+  free(results);
   return 0;
 }
 
