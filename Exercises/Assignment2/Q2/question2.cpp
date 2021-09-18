@@ -8,74 +8,85 @@
 
 using namespace std;
 
-int numThreads;
+int numThreads, numSeeds = 0;
 int *results;
-long long maxNumber;
-// double a = 0, b = 1, w, results;
+int *seeds;
+long long sqrtNumber, maxNumber;
 
-// struct Config
-// {
-//   int startI;
-//   int numTrapPerThread;
-// } * cfg;
+struct Config
+{
+  int threadID;
+  int range;
+} * cfg;
 
 pthread_mutex_t results_mutex;
 
-// double function(double x)
-// {
-//   return 4 / (1 + (x * x));
-// }
-
-// void *calculateFactorial(void *conf)
-// {
-//   Config *cfg = (Config *)conf;
-//   double localResults;
-
-//   for (int i = 0; i < cfg->numTrapPerThread; i++)
-//   {
-//     int pos = cfg->startI * cfg->numTrapPerThread + i;
-//     if (pos == 0 || pos == maxNumber)
-//     {
-//       continue;
-//     }
-//     localResults = localResults + 2 * function(a + ((pos)*w));
-//   }
-
-//   pthread_mutex_lock(&results_mutex);
-//   results += localResults;
-//   pthread_mutex_unlock(&results_mutex);
-
-//   pthread_exit(0);
-// }
-
-// int getNumTrapPerThread(int i, int numThreads, int maxNumber)
-// {
-//   // Add surplus to the last thread
-//   if (i == numThreads - 1)
-//   {
-//     return (maxNumber / numThreads) + (maxNumber % numThreads);
-//   }
-//   return maxNumber / numThreads;
-// }
-
-int *markNonPrimes(int startNumber, int maxNumber)
+void markNumbers(int startNumber, int maxNumber)
 {
-  for (; startNumber <= maxNumber; startNumber++)
+  cout << startNumber << " startNumber and maxnumber " << maxNumber << "\n";
+  for (int i = startNumber; i <= maxNumber; i++)
   {
-    // TODO:add a read mutex here
-    if (results[startNumber] == 1)
+    if (results[i] == 1)
     {
       continue;
     }
-    int multiple = 2;
-    while (multiple * startNumber <= maxNumber)
+
+    for (int j = 0; j < numSeeds; j++)
     {
-      // TODO:add a write mutex here
-      results[multiple * startNumber] = 1;
-      multiple++;
+      if (i % seeds[j] == 0)
+      {
+        cout << "Marking " << i << " because " << seeds[j] << "\n";
+        results[i] = 1;
+        break;
+      }
     }
   }
-  return results;
+}
+
+void *calculateResult(void *conf)
+{
+  Config *cfg = (Config *)conf;
+
+  int startPos = sqrtNumber + (cfg->threadID * (maxNumber - sqrtNumber) / numThreads);
+  int maxNumber = startPos + cfg->range;
+
+  markNumbers(startPos + 1, maxNumber);
+  pthread_exit(0);
+}
+
+int getRangePerThread(int i, int numThreads, int maxNumber)
+{
+  // Add surplus to the last thread
+  if (i == numThreads - 1)
+  {
+    return (maxNumber / numThreads) + (maxNumber % numThreads);
+  }
+  return maxNumber / numThreads;
+}
+
+void getSeeds(int startNumber, int maxNumber)
+{
+  int tempSeeds[maxNumber] = {};
+
+  for (int i = startNumber; i <= maxNumber; i++)
+  {
+    if (results[i] == 1)
+    {
+      continue;
+    }
+
+    for (int j = 2; i * j <= maxNumber; j++)
+    {
+      results[j * i] = 1;
+    }
+    tempSeeds[numSeeds++] = i;
+  }
+
+  seeds = (int *)malloc(sizeof(int) * numSeeds);
+  for (int k = 0; k < numSeeds; k++)
+  {
+    seeds[k] = tempSeeds[k];
+  }
 }
 
 int getAnswer(int numThreads, int maxNumber)
@@ -87,25 +98,25 @@ int getAnswer(int numThreads, int maxNumber)
 
   auto begin_time = chrono::high_resolution_clock::now();
 
+  // mark initials
   results[1] = 1;
+  sqrtNumber = (long long)(floor(sqrt(maxNumber)));
+  getSeeds(2, sqrtNumber);
 
-  int init = int(floor(sqrt(maxNumber)));
-  markNonPrimes(2, maxNumber);
+  for (int i = 0; i < numThreads; i++)
+  {
+    cfg = (Config *)malloc(sizeof(struct Config));
+    cfg->threadID = i;
+    cfg->range = getRangePerThread(i, numThreads, maxNumber - sqrtNumber);
 
-  // for (int i = 0; i < numThreads; i++)
-  // {
-  //   cfg = (Config *)malloc(sizeof(struct Config));
-  //   cfg->startI = i;
-  //   cfg->numTrapPerThread = getNumTrapPerThread(i, numThreads, maxNumber);
-  //   pthread_create(&threads[i], NULL, calculateFactorial, (void *)cfg);
-  // }
+    pthread_create(&threads[i], NULL, calculateResult, (void *)cfg);
+  }
 
-  // for (int j = 0; j < numThreads; j++)
-  // {
-  //   pthread_join(threads[j], NULL);
-  // }
+  for (int i = 0; i < numThreads; i++)
+  {
+    pthread_join(threads[i], NULL);
+  }
 
-  // double total = (((b - a) / maxNumber) / 2) * (function(a) + results + function(b));
   auto end_time = std::chrono::high_resolution_clock::now();
 
   cout << "results: ";
@@ -116,6 +127,7 @@ int getAnswer(int numThreads, int maxNumber)
       cout << i << ", ";
     }
   }
+
   cout << "\n time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   free(results);
   return 0;
