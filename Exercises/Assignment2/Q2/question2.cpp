@@ -23,7 +23,7 @@ pthread_mutex_t results_mutex;
 
 void markNumbers(int startNumber, int maxNumber)
 {
-  cout << startNumber << " startNumber and maxnumber " << maxNumber << "\n";
+  // cout << startNumber << " startNumber and maxnumber " << maxNumber << "\n";
   for (int i = startNumber; i <= maxNumber; i++)
   {
     if (results[i] == 1)
@@ -35,7 +35,7 @@ void markNumbers(int startNumber, int maxNumber)
     {
       if (i % seeds[j] == 0)
       {
-        cout << "Marking " << i << " because " << seeds[j] << "\n";
+        // cout << "Marking " << i << " because " << seeds[j] << "\n";
         results[i] = 1;
         break;
       }
@@ -46,11 +46,12 @@ void markNumbers(int startNumber, int maxNumber)
 void *calculateResult(void *conf)
 {
   Config *cfg = (Config *)conf;
+  // cout << cfg->range << " ";
 
-  int startPos = sqrtNumber + (cfg->threadID * (maxNumber - sqrtNumber) / numThreads);
+  int startPos = (sqrtNumber + 1) + (cfg->threadID * (maxNumber - sqrtNumber - 1)) / numThreads;
   int maxNumber = startPos + cfg->range;
 
-  markNumbers(startPos + 1, maxNumber);
+  markNumbers(startPos, maxNumber);
   pthread_exit(0);
 }
 
@@ -107,7 +108,7 @@ int getAnswer(int numThreads, int maxNumber)
   {
     cfg = (Config *)malloc(sizeof(struct Config));
     cfg->threadID = i;
-    cfg->range = getRangePerThread(i, numThreads, maxNumber - sqrtNumber);
+    cfg->range = getRangePerThread(i, numThreads, maxNumber - sqrtNumber - 1);
 
     pthread_create(&threads[i], NULL, calculateResult, (void *)cfg);
   }
@@ -119,16 +120,20 @@ int getAnswer(int numThreads, int maxNumber)
 
   auto end_time = std::chrono::high_resolution_clock::now();
 
-  cout << "results: ";
+  int countPrimes = 0;
+  cout << "total number of primes < " << maxNumber << " : ";
   for (int i = 1; i <= maxNumber; i++)
   {
     if (results[i] == 0)
     {
-      cout << i << ", ";
+      // uncomment to print the actual numbers
+      // cout << i << ", ";
+      countPrimes++;
     }
   }
 
-  cout << "\n time taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
+  cout << countPrimes;
+  cout << "\ntime taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   free(results);
   return 0;
 }
