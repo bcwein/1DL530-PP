@@ -3,7 +3,7 @@
 #
 
 all: 
-	g++ -std=c++11 -pthread -fsanitize=thread -Wall ${PROG}.cpp -o ${PROG}
+	g++ -std=c++11 -pthread -O3 -fsanitize=thread -Wall ${PROG}.cpp -o ${PROG}
 
 clean:
 	$(RM) ${PROG}
