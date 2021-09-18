@@ -3,12 +3,9 @@
 #include <random>
 #include <sstream>
 #include <string>
-#include <mutex>
 
 #include "benchmark.hpp"
 #include "sorted_list.hpp"
-
-std::mutex lock;
 
 static const int DATA_VALUE_RANGE_MIN = 0;
 static const int DATA_VALUE_RANGE_MAX = 256;
@@ -17,9 +14,7 @@ static const int DATA_PREFILL = 512;
 template<typename List>
 void read(List& l, int random) {
 	/* read operations: 100% count */
-	lock.lock();
 	l.count(random % DATA_VALUE_RANGE_MAX);
-	lock.unlock();
 }
 
 template<typename List>
@@ -27,13 +22,9 @@ void update(List& l, int random) {
 	/* update operations: 50% insert, 50% remove */
 	auto choice = (random % (2*DATA_VALUE_RANGE_MAX))/DATA_VALUE_RANGE_MAX;
 	if(choice == 0) {
-		lock.lock();
 		l.insert(random % DATA_VALUE_RANGE_MAX);
-		lock.unlock();
 	} else {
-		lock.lock();
 		l.remove(random % DATA_VALUE_RANGE_MAX);
-		lock.unlock();
 	}
 }
 
@@ -42,17 +33,11 @@ void mixed(List& l, int random) {
 	/* mixed operations: 6.25% update, 93.75% count */
 	auto choice = (random % (32*DATA_VALUE_RANGE_MAX))/DATA_VALUE_RANGE_MAX;
 	if(choice == 0) {
-		lock.lock();
 		l.insert(random % DATA_VALUE_RANGE_MAX);
-		lock.unlock();
 	} else if(choice == 1) {
-		lock.lock();
 		l.remove(random % DATA_VALUE_RANGE_MAX);
-		lock.unlock();
 	} else {
-		lock.lock();
 		l.count(random % DATA_VALUE_RANGE_MAX);
-		lock.unlock();
 	}
 }
 
