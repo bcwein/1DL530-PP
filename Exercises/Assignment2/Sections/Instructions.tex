@@ -1,0 +1,57 @@
+\section{Instructions}
+
+For compiling the code that was provided in the assignment as well as the 
+code that was edited for solving the exercises, the makefile provided was used.
+In some cases, the programs would not compile with -std=c++11 flag. This was mentioned
+in the lectures. If that is the case. Replace the flag with -std=c++0x flag.
+
+We have used \textit{siegnbahn.it.uu.se} for checking that the code runs.
+The code is structured in the following way:
+
+\begin{itemize}
+    \item Q1
+        \begin{itemize}
+            \item \textit{question1.cpp}
+            \item Makefile
+        \end{itemize}
+    \item Q2
+        \begin{itemize}
+            \item \textit{question2.cpp}
+            \item Makefile
+        \end{itemize}
+    \item Q4
+        \begin{itemize}
+            \item Coarse-grained locking.
+                \begin{itemize}
+                    \item \textit{benchmark\_example.cpp}
+                    \item \textit{benchmark.hpp}
+                    \item \textit{sorted\_list.hpp}
+                    \item Makefile
+                \end{itemize}
+            \item Fine-grained locking.
+                \begin{itemize}
+                    \item Same as above
+                \end{itemize}
+            \item Coarse-grained locking TATAS
+                \begin{itemize}
+                    \item Same as above
+                \end{itemize}
+            \item fine-grained locking TATAS
+                \begin{itemize}
+                    \item Same as above
+                \end{itemize}
+            \item fine-grained locking using scalable queue lock
+                \begin{itemize}
+                    \item Same as above
+                \end{itemize}
+        \end{itemize}
+\end{itemize}
+
+There is a makefile for every question and subquestion. To check a question
+just navigate to the corresponding code and run:
+
+\begin{center}
+    \textit{Make PROG=\textbf{filename}}
+\end{center}
+
+Where \textit{\textbf{filename}} is the name of the C++ file to compile.
