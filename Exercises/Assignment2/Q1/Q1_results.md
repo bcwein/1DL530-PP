@@ -9,9 +9,11 @@
 
 # b)
 
-As threads increased for low amount of trapezes, the time to compute actually increases. This is due to the overhead that parallelisation adds to the application (thread-creation, waiting on threads to complete and lock-waits). 
+As threads increased for low amount of trapezes, the time to compute actually increases. This is due to the overhead that parallelisation adds to the application (thread-creation, waiting on threads to complete and lock-waits).
 However as we reach medium amount of trapezes (1000000) or high (1000000000) we see that the time decreases significantly as at this point the cost to parallelize is less than the benefit it offers.
 While the number of trapezes increase, so too did the accuracy of the result.
+
+<!-- graphs and output table can be inserted here to display evidence of above -->
 
 # c)
 
