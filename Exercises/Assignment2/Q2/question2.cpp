@@ -134,7 +134,6 @@ int getAnswer(int numThreads, int maxNumber)
 
   cout << countPrimes;
   cout << "\ntime taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
-  free(results);
   return 0;
 }
 
