@@ -1,0 +1,48 @@
+\section{Numerical Integration}
+
+To numerically calculate a integral of a function $f$. We can
+use the trapezoidal rule \cite{trapezoidal}. The trapezoidal rule 
+approximates the area under a graph of a function as a trapezoid and 
+calulates the area. This can be done for more and more trapezoids to increase
+accuraccy but also coming at a computational cost. The trapezoidal rule can 
+approximate a definate integral with riemann sums by splitting the interval 
+$[a, b]$ such as $a < x_0 < x_1 < \dots < x_{N-1} < x_N$ and perform the 
+following calculation
+
+\begin{equation}
+    \int_a^b f(x) \, dx \approx \frac{\Delta x}{2} \left(f(x_0) + 2f(x_1) + \cdots + 2f(x_{N-1}) + f(x_N)\right)
+\end{equation}
+
+The sum in this calculation does not depend on eachother and can therefore be
+parallelised and calculated independently and summed up when they are complete.
+This has been implemented in our code by creating a C++ program that takes in
+the command line arguments $N$ for the no of threads and $T$ for the no of
+trapezoids. All threads gets $\frac{N}{T}$ trapezoids besides the last unlucky
+thread that gets $\frac{N}{T} + T \Mod N$ due to ease of implementation. All
+the threads operate this function and work on a shared variable to calculate 
+the sum, hence the mutexes.
+
+\begin{lstlisting}[language=C++, caption=non-determinism.cpp]
+void *calculateFactorial(void *conf)
+{
+  Config *cfg = (Config *)conf;
+  double localResults;
+
+  for (int i = 0; i < cfg->numTrapPerThread; i++)
+  {
+    int pos = cfg->startI * cfg->numTrapPerThread + i;
+    if (pos == 0 || pos == numTrapezes)
+    {
+      continue;
+    }
+    localResults = localResults + 2 * function(a + ((pos)*w));
+  }
+
+  results_mutex.lock();
+  results += localResults;
+  results_mutex.unlock();
+
+  pthread_exit(0);
+}
+\end{lstlisting}
+
