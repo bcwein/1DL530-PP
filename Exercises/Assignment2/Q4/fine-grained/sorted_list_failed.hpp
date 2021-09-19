@@ -4,6 +4,8 @@
 #include <thread>
 #include <mutex>
 
+const int MAX = 256;
+
 /* a sorted list implementation by David Klaftenegger, 2015
  * please report bugs or suggest improvements to david.klaftenegger@it.uu.se
  */
@@ -13,7 +15,7 @@ template<typename T>
 struct node {
 	T value;
 	node<T>* next;
-	std::mutex l;
+	std::mutex tl;
 };
 
 /* non-concurrent sorted singly-linked list */
@@ -47,48 +49,57 @@ class sorted_list {
 			/* first find position */
 			node<T>* pred = nullptr;
 			node<T>* succ = first;
-			if(succ->next) {
-				succ->l.lock();
-			}
-			/* Check that first is not nullptr*/
+			succ->tl.lock();
 			while(succ != nullptr && succ->value < v) {
 				pred = succ;
-				succ->l.unlock();
+				pred->tl.unlock();
+				succ->next->tl.lock();
 				succ = succ->next;
-				succ->l.lock();
 			}
 			
 			/* construct new node */
 			node<T>* current = new node<T>();
+			current->tl.lock();
 			current->value = v;
-
 			/* insert new node between pred and succ */
 			current->next = succ;
+			pred->tl.lock();
 			if(pred == nullptr) {
 				first = current;
+				current->tl.unlock();
 			} else {
 				pred->next = current;
+				current->tl.unlock();
 			}
+			pred->tl.unlock();
 		}
 
 		void remove(T v) {
 			/* first find position */
 			node<T>* pred = nullptr;
 			node<T>* current = first;
+			current->tl.lock();
 			while(current != nullptr && current->value < v) {
 				pred = current;
+				pred->tl.unlock();
+				current->next->tl.lock();
 				current = current->next;
 			}
 			if(current == nullptr || current->value != v) {
 				/* v not found */
+				current->tl.unlock();
 				return;
 			}
 			/* remove current */
+			pred->tl.lock();
 			if(pred == nullptr) {
 				first = current->next;
+				current->tl.unlock();
 			} else {
 				pred->next = current->next;
+				current->tl.unlock();
 			}
+			pred->tl.unlock();
 			delete current;
 		}
 
@@ -96,14 +107,21 @@ class sorted_list {
 		std::size_t count(T v) {
 			std::size_t cnt = 0;
 			/* first go to value v */
+			node<T>* pred = first;
 			node<T>* current = first;
+			current->tl.lock();
 			while(current != nullptr && current->value < v) {
+				pred = current;
 				current = current->next;
+				current->tl.lock();
+				pred->tl.unlock();
 			}
-			/* count elements */
 			while(current != nullptr && current->value == v) {
+				pred = current;
 				cnt++;
 				current = current->next;
+				current->tl.lock();
+				pred->tl.unlock();
 			}
 			return cnt;
 		}
