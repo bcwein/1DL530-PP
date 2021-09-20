@@ -1,0 +1,20 @@
+1
+non-thread-safe read / threads: 1 - thousands of operations per second: 63.022400
+non-thread-safe update / threads: 1 - thousands of operations per second: 15.629815
+non-thread-safe mixed / threads: 1 - thousands of operations per second: 34.817369
+2
+non-thread-safe read / threads: 2 - thousands of operations per second: 54.090802
+non-thread-safe update / threads: 2 - thousands of operations per second: 12.294634
+non-thread-safe mixed / threads: 2 - thousands of operations per second: 27.808552
+4
+non-thread-safe read / threads: 4 - thousands of operations per second: 36.011862
+non-thread-safe update / threads: 4 - thousands of operations per second: 10.740380
+non-thread-safe mixed / threads: 4 - thousands of operations per second: 21.623339
+8
+non-thread-safe read / threads: 8 - thousands of operations per second: 22.577302
+non-thread-safe update / threads: 8 - thousands of operations per second: 8.413244
+non-thread-safe mixed / threads: 8 - thousands of operations per second: 16.096238
+16
+non-thread-safe read / threads: 16 - thousands of operations per second: 4.882480
+non-thread-safe update / threads: 16 - thousands of operations per second: 3.284856
+non-thread-safe mixed / threads: 16 - thousands of operations per second: 4.533693
