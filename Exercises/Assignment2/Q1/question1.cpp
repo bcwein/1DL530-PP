@@ -4,7 +4,7 @@
 #include <iomanip>
 #include <pthread.h>
 #include <chrono>
-
+#include <mutex>
 using namespace std;
 
 int numThreads, numTrapezes;
@@ -16,7 +16,7 @@ struct Config
   int numTrapPerThread;
 } * cfg;
 
-pthread_mutex_t results_mutex;
+std::mutex results_mutex;
 
 double function(double x)
 {
@@ -38,9 +38,9 @@ void *calculateFactorial(void *conf)
     localResults = localResults + 2 * function(a + ((pos)*w));
   }
 
-  pthread_mutex_lock(&results_mutex);
+  results_mutex.lock();
   results += localResults;
-  pthread_mutex_unlock(&results_mutex);
+  results_mutex.unlock();
 
   pthread_exit(0);
 }
@@ -60,7 +60,6 @@ int getAnswer(int numThreads, int numTrapezes)
   w = (b - a) / numTrapezes;
 
   pthread_t threads[numThreads];
-  pthread_mutex_init(&results_mutex, NULL);
 
   auto begin_time = chrono::high_resolution_clock::now();
   for (int i = 0; i < numThreads; i++)
