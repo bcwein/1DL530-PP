@@ -1,8 +1,8 @@
 #ifndef lacpp_sorted_list_hpp
 #define lacpp_sorted_list_hpp lacpp_sorted_list_hpp
 
-#include <thread>
-#include <mutex>
+#include<pthread.h>
+#include<mutex>
 
 /* a sorted list implementation by David Klaftenegger, 2015
  * please report bugs or suggest improvements to david.klaftenegger@it.uu.se
@@ -20,6 +20,7 @@ struct node {
 template<typename T>
 class sorted_list {
 	node<T>* first = nullptr;
+	std::mutex l;
 
 	public:
 		/* default implementations:
@@ -46,22 +47,22 @@ class sorted_list {
 		void insert(T v) {
 			/* first find position */
 			node<T>* pred = nullptr;
+			l.lock();
 			node<T>* succ = first;
-			if(succ->next) {
-				succ->l.lock();
-			}
+			if (succ) succ->l.lock();
+			l.unlock();
+			
 			/* Check that first is not nullptr*/
 			while(succ != nullptr && succ->value < v) {
+				if(pred) pred->l.unlock();
 				pred = succ;
-				succ->l.unlock();
 				succ = succ->next;
-				succ->l.lock();
+				if(succ) succ->l.lock();
 			}
 			
 			/* construct new node */
 			node<T>* current = new node<T>();
 			current->value = v;
-
 			/* insert new node between pred and succ */
 			current->next = succ;
 			if(pred == nullptr) {
@@ -69,6 +70,8 @@ class sorted_list {
 			} else {
 				pred->next = current;
 			}
+			if(pred) pred->l.unlock();
+			if(current) current->l.unlock();
 		}
 
 		void remove(T v) {
