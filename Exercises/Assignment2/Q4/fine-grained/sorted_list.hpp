@@ -22,6 +22,7 @@ template <typename T>
 class sorted_list
 {
 	node<T> *first = nullptr;
+	std::mutex l;
 
 public:
 	/* default implementations:
@@ -51,11 +52,10 @@ public:
 	{
 		/* first find position */
 		node<T> *pred = nullptr;
+		l.lock();
 		node<T> *succ = first;
-		if (succ != nullptr)
-		{
-			succ->l.lock();
-		}
+		if(succ) succ->l.lock();
+		l.unlock();
 		/* Check that first is not nullptr*/
 		while (succ != nullptr && succ->value < v)
 		{
@@ -82,27 +82,36 @@ public:
 		{
 			pred->next = current;
 		}
-		if (succ != nullptr)
-		{
-			succ->l.unlock();
-		}
+		if (succ) succ->l.unlock();
 	}
 
 	void remove(T v)
 	{
 		/* first find position */
 		node<T> *pred = nullptr;
+		l.lock();
 		node<T> *current = first;
+		if(current) current->l.lock();
+		l.unlock();
 		while (current != nullptr && current->value < v)
 		{
 			pred = current;
+			current->l.unlock();
 			current = current->next;
+			if(current != nullptr)
+			{
+				current->l.lock();
+			}
 		}
+
 		if (current == nullptr || current->value != v)
 		{
 			/* v not found */
+			if (current) current->l.unlock();
 			return;
 		}
+
+		if(pred) pred->l.lock();
 		/* remove current */
 		if (pred == nullptr)
 		{
@@ -112,6 +121,8 @@ public:
 		{
 			pred->next = current->next;
 		}
+		if(pred) pred->l.unlock();
+		if(current) current->l.unlock();
 		delete current;
 	}
 
@@ -120,17 +131,25 @@ public:
 	{
 		std::size_t cnt = 0;
 		/* first go to value v */
+		l.lock();
 		node<T> *current = first;
+		if(current) current->l.lock();
+		l.unlock();
 		while (current != nullptr && current->value < v)
 		{
+			current->l.unlock();
 			current = current->next;
+			if(current) current->l.lock();
 		}
 		/* count elements */
 		while (current != nullptr && current->value == v)
 		{
 			cnt++;
+			current->l.unlock();
 			current = current->next;
+			if(current) current->l.lock();
 		}
+		if(current) current->l.unlock();
 		return cnt;
 	}
 };
