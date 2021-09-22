@@ -25,15 +25,15 @@ class sorted_list
 
 public:
 	/* default implementations:
-		 * default constructor
-		 * copy constructor (note: shallow copy)
-		 * move constructor
-		 * copy assignment operator (note: shallow copy)
-		 * move assignment operator
-		 *
-		 * The first is required due to the others,
-		 * which are explicitly listed due to the rule of five.
-		 */
+	* default constructor
+	* copy constructor (note: shallow copy)
+	* move constructor
+	* copy assignment operator (note: shallow copy)
+	* move assignment operator
+	*
+	* The first is required due to the others,
+	* which are explicitly listed due to the rule of five.
+	*/
 	sorted_list() = default;
 	sorted_list(const sorted_list<T> &other) = default;
 	sorted_list(sorted_list<T> &&other) = default;
