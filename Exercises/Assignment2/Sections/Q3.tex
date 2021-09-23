@@ -26,6 +26,10 @@ Yes (in a dangerously fragile manner since it is not deadlock free. See question
 
 \subsection{Question 2}
 
+\begin{center}
+    \textit{Is this protocol starvation-free?}
+\end{center}
+
 Yes in the sense that no priority is given to any of the waiting threads. 
 And thus the quickest thread to set 'turn=me' when 'busy = false' will get the 
 lock (could this leave one thread waiting for longer than others? Yes, but that 
@@ -57,6 +61,10 @@ release and are equally setting 'turn' to their IDs.
 \end{enumerate}
 
 \subsection{Question 3}
+
+\begin{center}
+    \textit{Is this protocol deadlock-free?}
+\end{center}
 
 No. Due to the do while approached used, the 'turn' variable can be changed 
 between setting 'busy=true' and the check 'turn != me'. This will occur when two 

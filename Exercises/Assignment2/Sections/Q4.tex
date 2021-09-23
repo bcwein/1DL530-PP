@@ -8,7 +8,7 @@ locks to properly syncrhonise the list.
 
 To implement coarse grained locking. A lock on the whole list was implemented.
 This means that if any of the methods \textbf{insert}, \textbf{remove} or 
-\textbf{count} then the list will become unavailable for other threads while 
+\textbf{count} is called then the list will become unavailable for other threads while 
 this operation runs. This obviously will make it possible to have multiple 
 threads operating on the list but it also leaves threads waiting while another 
 one opreates on it.
@@ -69,7 +69,7 @@ from threads as well as the locking locks out every single trhread other than
 the one that is currently in the critical section. This can bee seen in figure
 \ref{fig:coarsegrained}.
 
-\subsection{Coarse-grained locking with TATAS}
+\subsection{Coarse-grained locking with tatas}
 Here we do the same implementation of locking but the lock we will use is a
 Test-And-Test-And-Set (TATAS) lock. This has been implemented by introducing a 
 class called TATAS
@@ -110,7 +110,7 @@ linked list with this class and calling its lock and unlock method.
 The locking works by having a atomic boolean. When a thread calls 'lock'
 it continually observes the atmoic bool l and when this becomes false. It checks
 the value of the boolean with the exchange method. This method returns the value
-of the atomix boolean, then tries to change it. So if it has changed to true
+of the atomic boolean, then tries to change it. So if it has changed to true
 in the time before the first check. The do-while loop catches this and it goes 
 back. Unlocking is simple and just calls exchange without any further checks.
 
@@ -203,3 +203,16 @@ The code that we have here is able to run with 1 thread. Before this
 we struggled with segmentation errors. When this runs with more thread. A data
 race is present. We do not know exactly where the error is. But we know that the
 order of locking and unlocking is wrong.
+
+\subsection{Fine-grained locking using TATAS}
+
+To implement this. We would have done the same as we tried in the fine-grained 
+locking using std::mutex above. But here the locks would have been replaced with
+the tatas class that has been implemented by us. But since we did not 
+manage to implement fine-grained locking with regular mutexes. We have not bee
+able to implement this either.
+
+\subsection{Scalable Queue Locking}
+
+Given that we did not have time to implement the fine-grained locking,
+we have not been able to start on the task of Scalable Queue Locking.
