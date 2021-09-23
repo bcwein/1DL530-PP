@@ -8,7 +8,7 @@ locks to properly synchronize the list.
 
 To implement coarse grained locking. A lock on the whole list was implemented.
 This means that if any of the methods \textbf{insert}, \textbf{remove} or 
-\textbf{count} then the list will become unavailable for other threads while 
+\textbf{count} is called then the list will become unavailable for other threads while 
 this operation runs. This obviously will make it possible to have multiple 
 threads operating on the list but it also leaves threads waiting while another 
 one operates on it.
@@ -69,7 +69,7 @@ from threads as well as the locking locks out every single thread other than
 the one that is currently in the critical section. This can bee seen in figure
 \ref{fig:coarsegrained}.
 
-\subsection{Coarse-grained locking with TATAS}
+\subsection{Coarse-grained locking with tatas}
 Here we do the same implementation of locking but the lock we will use is a
 Test-And-Test-And-Set (TATAS) lock. This has been implemented by introducing a 
 class called TATAS
