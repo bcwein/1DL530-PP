@@ -2,7 +2,7 @@
 
 In this exercise we are supposed to take a sequential implementation of a 
 linked list and make this concurrent. This will demand a sophisticated use of
-locks to properly syncrhonise the list.
+locks to properly synchronize the list.
 
 \subsection{Coarse Grained Locking using Mutex}
 
@@ -11,7 +11,7 @@ This means that if any of the methods \textbf{insert}, \textbf{remove} or
 \textbf{count} then the list will become unavailable for other threads while 
 this operation runs. This obviously will make it possible to have multiple 
 threads operating on the list but it also leaves threads waiting while another 
-one opreates on it.
+one operates on it.
 
 To implement this in C++, we updated the sorted list class to have a mutex as a
 class variable.
@@ -65,7 +65,7 @@ and the same locked is used for all methods, in essence, the whole list is owned
 by a single thread. This implementation works and multiple threads are able to 
 run. From simulations we see that the number of operations decrease as more and
 more threads are added. This makes sense since there now is introduced overhead
-from threads as well as the locking locks out every single trhread other than 
+from threads as well as the locking locks out every single thread other than 
 the one that is currently in the critical section. This can bee seen in figure
 \ref{fig:coarsegrained}.
 
@@ -108,25 +108,24 @@ class tatas {
 The implementation for course-grained TATAS just replaces the mutex in the
 linked list with this class and calling its lock and unlock method.
 The locking works by having a atomic boolean. When a thread calls 'lock'
-it continually observes the atmoic bool l and when this becomes false. It checks
+it continually observes the atomic bool l and when this becomes false. It checks
 the value of the boolean with the exchange method. This method returns the value
-of the atomix boolean, then tries to change it. So if it has changed to true
+of the atomic boolean, then tries to change it. So if it has changed to true
 in the time before the first check. The do-while loop catches this and it goes 
 back. Unlocking is simple and just calls exchange without any further checks.
 
-This implementation works. But when we visualise the performance of this we see
+This implementation works. But when we visualize the performance of this we see
 that the performance gets even worse. This is due to the even more extensive 
-waiting that therads have to go through in this program as well as the locking
-beeing coarse grained. This is shown in figure \ref{fig:coarsegrainedtatas}.
+waiting that threads have to go through in this program as well as the locking
+being coarse grained. This is shown in figure \ref{fig:coarsegrainedtatas}.
 
-\section{Fine-grained locking}
+\section{Fine-grained locking with Mutex}
 
-For fine grained locking, we have not been as successful. Our approach has been
-this:
+Our understanding of fine-grained locking is as follows:
 
 \begin{itemize}
 	\item To address the challenges seen in the previous sections, another way 
-	of calling threads and to synchronise them
+	of calling threads and to synchronies them
 	\item Fine-grained has been interpreted by us to mean that each node in the 
 	list should have their own locks, and locking nodes that is operated on.
 	\item This should allow different threads to concurrently operate on different
@@ -198,8 +197,38 @@ void insert(T v)
 }
 \end{lstlisting}
 
-Too see the other methods. Please see the attatched code.
-The code that we have here is able to run with 1 thread. Before this
-we struggled with segmentation errors. When this runs with more thread. A data
-race is present. We do not know exactly where the error is. But we know that the
-order of locking and unlocking is wrong.
+The other methods implementation can be found in the attached code.
+Whilst the code compiles and executes successfully with a single thread,
+upon introducing >1 thread, data-races were present due to the incorrect order of locking 
+and unlocking. 
+Due to time limitations we were unable to debug this section further. 
+However, based on what was observed in the test with a single thread, the performance of the 
+program should increase in a noticeable fashion as the linked list can be interacted with by multiple threads 
+simultaneously (provided operations are occurring on different sections of the list)
+
+\section{Fine-grained locking with TATAS}
+% TODO - Insert proposed coding implementation here (should be the same as code above except substitute the locks with the TATAS implementation you already wrote)
+
+Similar to our results in the Fine-grained locking with mutex (TODO - INSERT SECTION REFERENCES HERE)
+The other methods implementation can be found in the attached code.
+And once again, whilst the code compiles and executes successfully with a single thread,
+upon introducing >1 thread, data-races were present due to the incorrect order of locking 
+and unlocking. 
+Due to time limitations we were unable to debug this section further. 
+However, based on what was observed in the test with a single thread, and with a knowledge of how TATAS locking functions,
+we can assume that the performance would be quicker than all coarse-grained implementations as threads increase, however it would be worse than the mutex lock above.
+This is presumed to be due to the extra locks and cache-busts which occur when a lock is released.
+
+\section{Fine-grained locking with scalable queue lock}
+
+% TODO - Insert proposed coding implementation here (should be the same as code above except substitute the locks with the a queue lock implementation from the slides)
+
+Similar to our results in the Fine-grained locking with mutex (TODO - INSERT SECTION REFERENCES HERE) or Fine-grained locking with TATAS (TODO - INSERT SECTION REFERENCES HERE)
+The other methods implementation can be found in the attached code.
+And once again, whilst the code compiles and executes successfully with a single thread,
+upon introducing >1 thread, data-races were present due to the incorrect order of locking 
+and unlocking. 
+Due to time limitations we were unable to debug this section further. 
+However, based on what was observed in the test with a single thread, and with a knowledge of how queue-locks operate, 
+we can assume a substantial speed-up as the number of threads increase (superseding all other implementations thus far). 
+The cost does occur in the complexity of code written.

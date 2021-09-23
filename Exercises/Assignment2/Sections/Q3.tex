@@ -26,6 +26,10 @@ Yes (in a dangerously fragile manner since it is not deadlock free. See question
 
 \subsection{Question 2}
 
+\begin{center}
+    \textit{Is this protocol starvation-free?}
+\end{center}
+
 Yes in the sense that no priority is given to any of the waiting threads. 
 And thus the quickest thread to set 'turn=me' when 'busy = false' will get the 
 lock (could this leave one thread waiting for longer than others? Yes, but that 
@@ -58,13 +62,17 @@ release and are equally setting 'turn' to their IDs.
 
 \subsection{Question 3}
 
+\begin{center}
+    \textit{Is this protocol deadlock-free?}
+\end{center}
+
 No. Due to the do while approached used, the 'turn' variable can be changed 
 between setting 'busy=true' and the check 'turn != me'. This will occur when two 
 threads try to execute the 'lock' method simultaneously
 
 \begin{enumerate}
 \item Thread 1 and Thread 2 attempt to enter the critical section.
-\item Thread 1 is slighlty quicker and sets 'turn=me' and 'busy=true'
+\item Thread 1 is slightly quicker and sets 'turn=me' and 'busy=true'
 \item At this point Thread 2 enters the second do-while loop and sets 'turn = me' .
 \item Thread 2 will now constantly pass the 'while (busy)' check (leaving it to loop).
 \item While Thread 1 will constantly pass the 'while ( turn !=me )' check (leaving it to loop).

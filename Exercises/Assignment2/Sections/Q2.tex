@@ -1,10 +1,10 @@
 \section{Sieve of Eratosthenes}
 
-The sieve of Eratosthenes is an ancient algorithm for findilg all primes up to a
+The sieve of Eratosthenes is an ancient algorithm for finding all primes up to a
 upper limit called Max. This algorithm is very old and was first described to 
 Eratosthenes of Cyrene, who lived in the 3rd century BC. 
 \cite{eratosthenes} 
-This is done by iteratievely calculate multiples of a 
+This is done by iteratively calculate multiples of a 
 iterator $k$ and marking these multiples. This iterator is is $2$ in the beginning
 and when all multiples of $2$ is marked, find the first unmarked number i.e $3$
 and repeat until $k^2 >$ Max.
@@ -67,7 +67,7 @@ For safety's sake we could add a read-write lock at this point, however the
 overhead of the lock will slow down the program for a case that is impossible 
 given the design of the algorithm. As mentioned above, there is no real communication between sub-threads of the 
 main thread (as they operate independently), with the only real communication 
-occuring between the main thread and individual sub-threads, where sub-threads 
+occurring between the main thread and individual sub-threads, where sub-threads 
 would update distinct shared-memory locations and for the main-thread to wait 
 for sub-threads to complete and join to the main thread.
 

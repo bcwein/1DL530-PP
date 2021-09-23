@@ -3,9 +3,9 @@
 To numerically calculate a integral of a function $f$. We can
 use the trapezoidal rule \cite{trapezoidal}. The trapezoidal rule 
 approximates the area under a graph of a function as a trapezoid and 
-calulates the area. This can be done for more and more trapezoids to increase
-accuraccy but also coming at a computational cost. The trapezoidal rule can 
-approximate a definate integral with riemann sums by splitting the interval 
+calculates the area. This can be done for more and more trapezoids to increase
+accuracy but also coming at a computational cost. The trapezoidal rule can 
+approximate a definite integral with riemann sums by splitting the interval 
 $[a, b]$ such as $a < x_0 < x_1 < \dots < x_{N-1} < x_N$ and perform the 
 following calculation
 
@@ -13,8 +13,8 @@ following calculation
     \int_a^b f(x) \, dx \approx \frac{\Delta x}{2} \left(f(x_0) + 2f(x_1) + \cdots + 2f(x_{N-1}) + f(x_N)\right)
 \end{equation}
 
-The sum in this calculation does not depend on eachother and can therefore be
-parallelised and calculated independently and summed up when they are complete.
+The sum in this calculation does not depend on each other and can therefore be
+parallelized and calculated independently and summed up when they are complete.
 This has been implemented in our code by creating a C++ program that takes in
 the command line arguments $N$ for the no of threads and $T$ for the no of
 trapezoids. All threads gets $\frac{N}{T}$ trapezoids besides the last unlucky
@@ -57,7 +57,7 @@ void *calculateFactorial(void *conf)
 
 As threads increased for low amount of trapezes, the time to compute actually 
 increases shown in figure \ref{fig:lowtrap}. This is due to the overhead that 
-parallelisation adds to the application (thread-creation, waiting on threads 
+parallelization adds to the application (thread-creation, waiting on threads 
 to complete and lock-waits). However as we reach medium amount of trapezes 
 ($10^6$ in figure \ref{fig:medtrap}) or high ($10^9$ in figure \ref{fig:hightrap}) we see that the time decreases significantly as 
 at this point the cost to parallelize is less than the benefit it offers. 
