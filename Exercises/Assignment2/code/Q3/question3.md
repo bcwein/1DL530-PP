@@ -2,8 +2,7 @@
 
 ## 1.
 
-Yes (in a dangerously fragile manner).
-An example of this can be see with two threads.
+Yes (in a dangerously fragile manner since it is not deadlock free. See question 3). An example of this can be see with two threads.
 
 - Thread 1 runs the `lock` method. This in turn sets `turn` to its ID and sets `busy` to true. The lock method then returns and Thread 1 goes into the critical section.
 - Thread 2 now attempts to go into the critical section. Thread 2 runs the `lock` method. `turn` is now set to Thread2's ID, and it loops as it fails the `busy=true` test.
