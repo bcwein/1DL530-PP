@@ -16,7 +16,7 @@ one operates on it.
 To implement this in C++, we updated the sorted list class to have a mutex as a
 class variable.
 
-\begin{lstlisting}[language=C++]
+\begin{lstlisting}[language=C++, caption=Sorted list with std::mutex]
 template<typename T>
 class sorted_list {
 	std::mutex li;
@@ -74,7 +74,7 @@ Here we do the same implementation of locking but the lock we will use is a
 Test-And-Test-And-Set (TATAS) lock. This has been implemented by introducing a 
 class called TATAS
 
-\begin{lstlisting}[language=C++, caption=TATAS Class]
+\begin{lstlisting}[language=C++, caption=TATAS Class, label=listing:tatas]
 class tatas {
 	private:
 		std::atomic<bool> l;
@@ -119,7 +119,7 @@ that the performance gets even worse. This is due to the even more extensive
 waiting that threads have to go through in this program as well as the locking
 being coarse grained. This is shown in figure \ref{fig:coarsegrainedtatas}.
 
-\section{Fine-grained locking with Mutex}
+\section{Fine-grained locking with Mutex}\label{sec:finegrainedmutex}
 
 Our understanding of fine-grained locking is as follows:
 
@@ -157,7 +157,7 @@ struct node {
 
 And here is how we implemented the insert method:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=C++, caption=Fine grained insert method attempt]
 /* insert v into the list */
 void insert(T v)
 {
@@ -206,29 +206,99 @@ However, based on what was observed in the test with a single thread, the perfor
 program should increase in a noticeable fashion as the linked list can be interacted with by multiple threads 
 simultaneously (provided operations are occurring on different sections of the list)
 
-\section{Fine-grained locking with TATAS}
-% TODO - Insert proposed coding implementation here (should be the same as code above except substitute the locks with the TATAS implementation you already wrote)
-
-Similar to our results in the Fine-grained locking with mutex (TODO - INSERT SECTION REFERENCES HERE)
+\section{Fine-grained locking with TATAS}\label{sec:finegrainedtatas}
+	
+Similar to our results in the Fine-grained locking with mutex in section \ref{sec:finegrainedmutex}.
 The other methods implementation can be found in the attached code.
 And once again, whilst the code compiles and executes successfully with a single thread,
 upon introducing >1 thread, data-races were present due to the incorrect order of locking 
 and unlocking. 
+
 Due to time limitations we were unable to debug this section further. 
 However, based on what was observed in the test with a single thread, and with a knowledge of how TATAS locking functions,
 we can assume that the performance would be quicker than all coarse-grained implementations as threads increase, however it would be worse than the mutex lock above.
 This is presumed to be due to the extra locks and cache-busts which occur when a lock is released.
+The code that we have implemented is shown below.
+
+\begin{lstlisting}[language=C++, caption=Sorted list tatas lock]
+	template<typename T>
+	class sorted_list {
+		tatas l;
+		node<T>* first = nullptr;
+	/* ... class continues ...*/
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++, caption=Fine grained attemot with tatas locks.]
+	/* insert v into the list */
+	void insert(T v)
+	{
+		/* first find position */
+		node<T> *pred = nullptr;
+		l.lock();
+		node<T> *succ = first;
+		if(succ) succ->l.lock();
+		l.unlock();
+		/* Check that first is not nullptr*/
+		while (succ != nullptr && succ->value < v)
+		{
+			pred = succ;
+			succ->l.unlock();
+			succ = succ->next;
+			if (succ != nullptr)
+			{
+				succ->l.lock();
+			}
+		}
+	
+		/* construct new node */
+		node<T> *current = new node<T>();
+		current->value = v;
+	
+		/* insert new node between pred and succ */
+		current->next = succ;
+		if (pred == nullptr)
+		{
+			first = current;
+		}
+		else
+		{
+			pred->next = current;
+		}
+		if (succ) succ->l.unlock();
+	}
+\end{lstlisting}
 
 \section{Fine-grained locking with scalable queue lock}
 
-% TODO - Insert proposed coding implementation here (should be the same as code above except substitute the locks with the a queue lock implementation from the slides)
-
-Similar to our results in the Fine-grained locking with mutex (TODO - INSERT SECTION REFERENCES HERE) or Fine-grained locking with TATAS (TODO - INSERT SECTION REFERENCES HERE)
+Similar to our results in the Fine-grained locking with mutex in section \ref{sec:finegrainedmutex} or Fine-grained locking with TATAS in section \ref{sec:finegrainedtatas}
 The other methods implementation can be found in the attached code.
-And once again, whilst the code compiles and executes successfully with a single thread,
-upon introducing >1 thread, data-races were present due to the incorrect order of locking 
-and unlocking. 
-Due to time limitations we were unable to debug this section further. 
+In this implementation we gote a segmentation fault. Due to time limitations we were unable to debug this section further. 
 However, based on what was observed in the test with a single thread, and with a knowledge of how queue-locks operate, 
 we can assume a substantial speed-up as the number of threads increase (superseding all other implementations thus far). 
-The cost does occur in the complexity of code written.
+The cost does occur in the complexity of code written. Our implementation is listed
+below.
+
+\begin{lstlisting}[language=C++, caption=The sholution we had in mind for queue lock]
+	struct qnode {
+		std::atomic<bool> locked = ATOMIC_VAR_INIT(false);
+	};
+	
+	class CLHLock {
+		private:
+			qnode *tail;
+			qnode *pred;
+			qnode *mynode = new qnode();
+		public:
+			void lock() {
+				pred = tail;
+				tail = mynode;
+				while (pred->locked.load()) {}
+			}
+			
+			void unlock() {
+				mynode->locked.store(false);
+				mynode = pred;
+			}
+	};
+	\end{lstlisting}
+	
