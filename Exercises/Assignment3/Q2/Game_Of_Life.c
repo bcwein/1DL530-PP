@@ -72,6 +72,7 @@ static void print_to_pgm(int ** array, int N, int t) {
 int main (int argc, char * argv[]) {
 	int N;	 			//array dimensions
 	int T; 				//time steps
+	int L;				// The no of threads
 	int ** current, ** previous; 	//arrays - one for current timestep, one for previous timestep
 	int ** swap;			//array pointer
 	int t, i, j, nbrs;		//helper variables
@@ -80,13 +81,14 @@ int main (int argc, char * argv[]) {
 	struct timeval ts,tf;
 
 	/*Read input arguments*/
-	if (argc != 3) {
-		fprintf(stderr, "Usage: ./exec ArraySize TimeSteps\n");
+	if (argc != 4) {
+		fprintf(stderr, "Usage: ./exec ArraySize TimeSteps NoThreads\n");
 		exit(-1);
 	}
 	else {
 		N = atoi(argv[1]);
 		T = atoi(argv[2]);
+		L = atoi(argv[3]);
 	}
 
 	/*Allocate and initialize matrices*/
@@ -103,17 +105,20 @@ int main (int argc, char * argv[]) {
 
 	gettimeofday(&ts,NULL);
 	for (t = 0 ; t < T ; t++) {
-		for (i = 1 ; i < N-1 ; i++)
-			for (j = 1 ; j < N-1 ; j++) {
-				nbrs = previous[i+1][j+1] + previous[i+1][j] + previous[i+1][j-1] \
-					+ previous[i][j-1] + previous[i][j+1] \
-					+ previous[i-1][j-1] + previous[i-1][j] + previous[i-1][j+1];
-				if (nbrs == 3 || ( previous[i][j]+nbrs == 3))
-					current[i][j] = 1;
-				else 
-					current[i][j] = 0;
-			}
-	
+		#pragma omp parallel num_threads(L) private(i, j, nbrs)
+		{
+			#pragma omp for collapse(2)
+			for (i = 1 ; i < N-1 ; i++)
+				for (j = 1 ; j < N-1 ; j++) {
+					nbrs = previous[i+1][j+1] + previous[i+1][j] + previous[i+1][j-1] \
+						+ previous[i][j-1] + previous[i][j+1] \
+						+ previous[i-1][j-1] + previous[i-1][j] + previous[i-1][j+1];
+					if (nbrs == 3 || ( previous[i][j]+nbrs == 3))
+						current[i][j] = 1;
+					else 
+						current[i][j] = 0;
+				}
+		}
 		#ifdef OUTPUT
 		print_to_pgm(current, N, t+1);
 		#endif

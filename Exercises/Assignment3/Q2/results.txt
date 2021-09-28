@@ -1,0 +1,75 @@
+(1,10)
+total number of primes < 10 : 4
+time taken: 0.504 ms
+(1,100)
+total number of primes < 100 : 25
+time taken: 0.599 ms
+(1,1000000)
+total number of primes < 1000000 : 78498
+time taken: 345.717 ms
+(1,10000000)
+total number of primes < 10000000 : 664579
+time taken: 7178.48 ms
+(1,90000000)
+total number of primes < 90000000 : 5216954
+time taken: 144403 ms
+(2,10)
+total number of primes < 10 : 4
+time taken: 0.56 ms
+(2,100)
+total number of primes < 100 : 25
+time taken: 0.494 ms
+(2,1000000)
+total number of primes < 1000000 : 78498
+time taken: 176.329 ms
+(2,10000000)
+total number of primes < 10000000 : 664579
+time taken: 3608.56 ms
+(2,90000000)
+total number of primes < 90000000 : 5216954
+time taken: 73255.6 ms
+(4,10)
+total number of primes < 10 : 4
+time taken: 1.039 ms
+(4,100)
+total number of primes < 100 : 25
+time taken: 1.077 ms
+(4,1000000)
+total number of primes < 1000000 : 78498
+time taken: 92.35 ms
+(4,10000000)
+total number of primes < 10000000 : 664579
+time taken: 1824.67 ms
+(4,90000000)
+total number of primes < 90000000 : 5216954
+time taken: 37410.9 ms
+(8,10)
+total number of primes < 10 : 4
+time taken: 2.732 ms
+(8,100)
+total number of primes < 100 : 25
+time taken: 4.415 ms
+(8,1000000)
+total number of primes < 1000000 : 78498
+time taken: 51.254 ms
+(8,10000000)
+total number of primes < 10000000 : 664579
+time taken: 924.539 ms
+(8,90000000)
+total number of primes < 90000000 : 5216954
+time taken: 18729.1 ms
+(16,10)
+total number of primes < 10 : 4
+time taken: 2.747 ms
+(16,100)
+total number of primes < 100 : 25
+time taken: 3.454 ms
+(16,1000000)
+total number of primes < 1000000 : 78498
+time taken: 30.484 ms
+(16,10000000)
+total number of primes < 10000000 : 664579
+time taken: 481.351 ms
+(16,90000000)
+total number of primes < 90000000 : 5216954
+time taken: 9379.51 ms
