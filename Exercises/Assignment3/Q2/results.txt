@@ -1,75 +1,60 @@
-(1,10)
-total number of primes < 10 : 4
-time taken: 0.504 ms
-(1,100)
-total number of primes < 100 : 25
-time taken: 0.599 ms
-(1,1000000)
-total number of primes < 1000000 : 78498
-time taken: 345.717 ms
-(1,10000000)
-total number of primes < 10000000 : 664579
-time taken: 7178.48 ms
-(1,90000000)
-total number of primes < 90000000 : 5216954
-time taken: 144403 ms
-(2,10)
-total number of primes < 10 : 4
-time taken: 0.56 ms
-(2,100)
-total number of primes < 100 : 25
-time taken: 0.494 ms
-(2,1000000)
-total number of primes < 1000000 : 78498
-time taken: 176.329 ms
-(2,10000000)
-total number of primes < 10000000 : 664579
-time taken: 3608.56 ms
-(2,90000000)
-total number of primes < 90000000 : 5216954
-time taken: 73255.6 ms
-(4,10)
-total number of primes < 10 : 4
-time taken: 1.039 ms
-(4,100)
-total number of primes < 100 : 25
-time taken: 1.077 ms
-(4,1000000)
-total number of primes < 1000000 : 78498
-time taken: 92.35 ms
-(4,10000000)
-total number of primes < 10000000 : 664579
-time taken: 1824.67 ms
-(4,90000000)
-total number of primes < 90000000 : 5216954
-time taken: 37410.9 ms
-(8,10)
-total number of primes < 10 : 4
-time taken: 2.732 ms
-(8,100)
-total number of primes < 100 : 25
-time taken: 4.415 ms
-(8,1000000)
-total number of primes < 1000000 : 78498
-time taken: 51.254 ms
-(8,10000000)
-total number of primes < 10000000 : 664579
-time taken: 924.539 ms
-(8,90000000)
-total number of primes < 90000000 : 5216954
-time taken: 18729.1 ms
-(16,10)
-total number of primes < 10 : 4
-time taken: 2.747 ms
-(16,100)
-total number of primes < 100 : 25
-time taken: 3.454 ms
-(16,1000000)
-total number of primes < 1000000 : 78498
-time taken: 30.484 ms
-(16,10000000)
-total number of primes < 10000000 : 664579
-time taken: 481.351 ms
-(16,90000000)
-total number of primes < 90000000 : 5216954
-time taken: 9379.51 ms
+(1,64, 1000)
+GameOfLife: Size 64 Steps 1000 Time 0.103246
+(1,64, 2000)
+GameOfLife: Size 64 Steps 2000 Time 0.202072
+(1,1024, 1000)
+GameOfLife: Size 1024 Steps 1000 Time 26.919984
+(1,1024, 2000)
+GameOfLife: Size 1024 Steps 2000 Time 53.895098
+(1,4096, 1000)
+GameOfLife: Size 4096 Steps 1000 Time 433.381987
+(1,4096, 2000)
+GameOfLife: Size 4096 Steps 2000 Time 866.057133
+(2,64, 1000)
+GameOfLife: Size 64 Steps 1000 Time 0.056618
+(2,64, 2000)
+GameOfLife: Size 64 Steps 2000 Time 0.107686
+(2,1024, 1000)
+GameOfLife: Size 1024 Steps 1000 Time 13.431874
+(2,1024, 2000)
+GameOfLife: Size 1024 Steps 2000 Time 26.914876
+(2,4096, 1000)
+GameOfLife: Size 4096 Steps 1000 Time 217.060854
+(2,4096, 2000)
+GameOfLife: Size 4096 Steps 2000 Time 434.111037
+(4,64, 1000)
+GameOfLife: Size 64 Steps 1000 Time 0.031977
+(4,64, 2000)
+GameOfLife: Size 64 Steps 2000 Time 0.059427
+(4,1024, 1000)
+GameOfLife: Size 1024 Steps 1000 Time 6.785567
+(4,1024, 2000)
+GameOfLife: Size 1024 Steps 2000 Time 13.529179
+(4,4096, 1000)
+GameOfLife: Size 4096 Steps 1000 Time 110.474165
+(4,4096, 2000)
+GameOfLife: Size 4096 Steps 2000 Time 220.966586
+(8,64, 1000)
+GameOfLife: Size 64 Steps 1000 Time 0.029868
+(8,64, 2000)
+GameOfLife: Size 64 Steps 2000 Time 0.058852
+(8,1024, 1000)
+GameOfLife: Size 1024 Steps 1000 Time 3.488805
+(8,1024, 2000)
+GameOfLife: Size 1024 Steps 2000 Time 7.594068
+(8,4096, 1000)
+GameOfLife: Size 4096 Steps 1000 Time 65.166056
+(8,4096, 2000)
+GameOfLife: Size 4096 Steps 2000 Time 127.138659
+(16,64, 1000)
+GameOfLife: Size 64 Steps 1000 Time 0.023997
+(16,64, 2000)
+GameOfLife: Size 64 Steps 2000 Time 0.039511
+(16,1024, 1000)
+GameOfLife: Size 1024 Steps 1000 Time 3.712320
+(16,1024, 2000)
+GameOfLife: Size 1024 Steps 2000 Time 7.783984
+(16,4096, 1000)
+GameOfLife: Size 4096 Steps 1000 Time 57.839931
+(16,4096, 2000)
+GameOfLife: Size 4096 Steps 2000 Time 114.871316
