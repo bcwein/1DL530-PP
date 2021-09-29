@@ -105,8 +105,14 @@ int main (int argc, char * argv[]) {
 
 	gettimeofday(&ts,NULL);
 	for (t = 0 ; t < T ; t++) {
+		/*
+		 * Declare Parallel region of the for loop.
+		*/
 		#pragma omp parallel num_threads(L) private(i, j, nbrs)
 		{
+			/*
+			 * Pragma omp for. Collapse(2) since it is a nested for loop.
+			*/
 			#pragma omp for collapse(2)
 			for (i = 1 ; i < N-1 ; i++)
 				for (j = 1 ; j < N-1 ; j++) {
