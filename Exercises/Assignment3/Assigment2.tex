@@ -1,0 +1,127 @@
+%-------------
+% PACKAGES %%
+%-------------
+\documentclass[6pt, twocolumn]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[nottoc,numbib]{tocbibind}
+\usepackage[parfill]{parskip}
+\usepackage{changepage}
+\usepackage{subcaption}
+\usepackage{changepage}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{minted}
+\usepackage[style=authoryear]{biblatex}
+\addbibresource{references.bib}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{%frame=tb,
+  language=C,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=false,
+  breakatwhitespace=false,
+  tabsize=4,
+  morekeywords={FIR_H_BUFFER,dsp16_t,dsp16_filt_iirpart}
+}
+
+\lstset{emph={%  
+    DSP16_Q,H_SIZE%
+    },emphstyle={\color{mauve}}%
+}
+
+\title{Uppsala University Template}
+
+\begin{document}
+
+%-------------------------
+%	uncomment irrelevant 
+%	parts, like logo etc
+%-------------------------
+\pagenumbering{Alph}
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\begin{center}
+%---------------------
+%	HEADING SECTIONS
+%---------------------
+\textsc{\LARGE Uppsala University}\\[1.5cm] % Name of your university/college
+\textsc{\Large Information Technology}\\[0.5cm] % Major heading such as course name
+\textsc{\large Assignment in 1DL460 Data Mining II}\\[0.5cm] % Minor heading such as course title
+
+%------------------
+%	TITLE SECTION
+%------------------
+\HRule \\[0.4cm]
+{ \huge \bfseries Review of Linking Women Editors of Periodicals to the Wikidata Knowledge Graph}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%--------------------
+%	AUTHOR SECTION
+%--------------------
+ %\begin{minipage}{1.4\textwidth}
+ %\begin{flushleft} 
+
+\large\emph{Author:}\\ Bjørn Christian Weinbach\\[1.0cm]%
+% \large\emph{Collaborated with:}\\Collaborator\\[1cm]
+                        		% \\ [1.0cm]%
+
+ %\end{flushleft}
+ %\end{minipage}
+
+%---------------------
+%	Supervisor
+%---------------------
+ %\begin{minipage}{0.4\textwidth}
+ %\begin{flushright} \large
+ %\emph{Supervisor:} \\
+ %Dr. James \textsc{Smith} % Supervisor's Name
+ %\end{flushright}
+ %\end{minipage}\\[2cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+{\large \today}\\[1cm] % Date
+
+%----------
+%	LOGO 
+%----------
+\includegraphics[width=1.7in]{uulogga.png}\\%[1cm]
+\end{center}
+\end{titlepage}
+\pagenumbering{arabic}
+\pagebreak
+%-------------------------
+%	Table of Contents
+%-------------------------
+%\tableofcontents
+%\pagebreak
+%-------------------------
+%       Main Text
+%-------------------------
+
+\newpage
+\printbibliography
+
+\end{document}
