@@ -27,18 +27,30 @@ int getSolution()
       cin >> b[row];
     }
   }
-  else
-  {
-  }
 
-  for (int row = numUnknowns - 1; row >= 0; row--)
-  {
+  for (int row = 0; row < numUnknowns; row++)
     x[row] = b[row];
-    for (int col = row + 1; col < numUnknowns; col++)
+  for (int col = numUnknowns - 1; col >= 0; col--)
+  {
+    x[col] /= a[col][col];
+    for (int row = 0; row < col; row++)
       x[row] -= a[row][col] * x[col];
-    x[row] /= a[row][row];
   }
 
+  // /* Obtaining Solution by Back Substitution Method */
+  // x[n] = a[n][n + 1] / a[n][n];
+
+  // for (i = n - 1; i >= 1; i--)
+  // {
+  //   x[i] = a[i][n + 1];
+  //   for (j = i + 1; j <= n; j++)
+  //   {
+  //     x[i] = x[i] - a[i][j] * x[j];
+  //   }
+  //   x[i] = x[i] / a[i][i];
+  // }
+
+  /* Displaying Solution */
   cout << endl
        << "Solution: " << endl;
   for (int row = 0; row < numUnknowns; row++)
