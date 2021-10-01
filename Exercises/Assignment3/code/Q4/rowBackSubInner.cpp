@@ -19,22 +19,20 @@ int getSolution()
   for (long long i = 0; i < numUnknowns; i++)
     a[i] = (double *)malloc(numUnknowns * sizeof(double));
 
-  if (numUnknowns <= 3)
+  if (numUnknowns == 3)
   {
-    cout << "Enter Coefficients of Augmented Matrix: " << endl;
-    for (int row = 0; row < numUnknowns; row++)
-    {
-      for (int col = 0; col < numUnknowns; col++)
-      {
-        cout << "a[" << row << "]" << col << "]= ";
-        cin >> a[row][col];
-        if (col == numUnknowns - 1)
-        {
-          cout << "b[" << row << "]" << col << "]= ";
-          cin >> b[row];
-        }
-      }
-    }
+    a[0][0] = 2;
+    a[0][1] = -3;
+    a[0][2] = 0;
+    b[0] = 3;
+    a[1][0] = 0;
+    a[1][1] = 1;
+    a[1][2] = 1;
+    b[1] = 1;
+    a[2][0] = 0;
+    a[2][1] = 0;
+    a[2][2] = -5;
+    b[2] = 0;
   }
   else
   {
@@ -54,31 +52,35 @@ int getSolution()
   }
 
   auto begin_time = chrono::high_resolution_clock::now();
+  for (int row = numUnknowns - 1; row >= 0; row--)
+  {
+    x[row] = b[row];
 
 #pragma omp parallel default(shared)
-  {
+    {
 #pragma omp master
-    {
       numThreads = omp_get_num_threads();
-    }
 #pragma omp for
-    for (int row = numUnknowns - 1; row >= 0; row--)
-    {
-      x[row] = b[row];
       for (int col = row + 1; col < numUnknowns; col++)
+      {
         x[row] -= a[row][col] * x[col];
-      x[row] /= a[row][row];
+      }
     }
+
+    x[row] /= a[row][row];
   }
   auto end_time = std::chrono::high_resolution_clock::now();
 
-  if (numUnknowns <= 5)
+  if (numUnknowns == 3)
   {
-    cout << endl
-         << "Solution: " << endl;
-    for (int row = 0; row < numUnknowns; row++)
+    if ((x[0] != 3) || (x[1] != 1) || (x[2] != 0))
     {
-      cout << "x[" << row << "] = " << x[row] << endl;
+      cout << endl
+           << "Solution: " << endl;
+      for (int row = 0; row < numUnknowns; row++)
+      {
+        cout << "x[" << row << "] = " << x[row] << endl;
+      }
     }
   }
   cout << "\nnumber of threads: " << numThreads;
