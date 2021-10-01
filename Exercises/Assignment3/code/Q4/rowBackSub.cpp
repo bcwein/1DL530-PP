@@ -2,11 +2,13 @@
 #include <iostream>
 #include <iomanip>
 #include <math.h>
+#include <omp.h>
 #include <stdlib.h>
 
 using namespace std;
 
 long long numUnknowns;
+int numThreads;
 
 int getSolution()
 {
@@ -52,12 +54,21 @@ int getSolution()
   }
 
   auto begin_time = chrono::high_resolution_clock::now();
-  for (int row = numUnknowns - 1; row >= 0; row--)
+
+#pragma omp parallel default(shared)
   {
-    x[row] = b[row];
-    for (int col = row + 1; col < numUnknowns; col++)
-      x[row] -= a[row][col] * x[col];
-    x[row] /= a[row][row];
+#pragma omp master
+    {
+      numThreads = omp_get_num_threads();
+    }
+#pragma omp for
+    for (int row = numUnknowns - 1; row >= 0; row--)
+    {
+      x[row] = b[row];
+      for (int col = row + 1; col < numUnknowns; col++)
+        x[row] -= a[row][col] * x[col];
+      x[row] /= a[row][row];
+    }
   }
   auto end_time = std::chrono::high_resolution_clock::now();
 
@@ -70,6 +81,7 @@ int getSolution()
       cout << "x[" << row << "] = " << x[row] << endl;
     }
   }
+  cout << "\nnumber of threads: " << numThreads;
   cout << "\ntime taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   return (0);
 }
