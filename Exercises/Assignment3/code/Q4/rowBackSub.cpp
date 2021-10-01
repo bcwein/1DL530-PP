@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <iomanip>
 #include <math.h>
@@ -9,28 +10,48 @@ long long numUnknowns;
 
 int getSolution()
 {
-  cout << setprecision(3) << fixed;
-  float a[numUnknowns][numUnknowns], b[numUnknowns], x[numUnknowns];
+  cout << setprecision(5) << fixed;
+
+  double b[numUnknowns], x[numUnknowns];
+  double *a[numUnknowns];
+  for (long long i = 0; i < numUnknowns; i++)
+    a[i] = (double *)malloc(numUnknowns * sizeof(double));
 
   if (numUnknowns <= 3)
   {
     cout << "Enter Coefficients of Augmented Matrix: " << endl;
     for (int row = 0; row < numUnknowns; row++)
     {
-      int col;
-      for (col = 0; col < numUnknowns; col++)
+      for (int col = 0; col < numUnknowns; col++)
       {
         cout << "a[" << row << "]" << col << "]= ";
         cin >> a[row][col];
+        if (col == numUnknowns - 1)
+        {
+          cout << "b[" << row << "]" << col << "]= ";
+          cin >> b[row];
+        }
       }
-      cout << "b[" << row << "]" << col << "]= ";
-      cin >> b[row];
     }
   }
   else
   {
+    srand(time(NULL));
+#pragma omp parallel for collapse(2)
+    for (int row = 0; row < numUnknowns; row++)
+    {
+      for (int col = 0; col < numUnknowns; col++)
+      {
+        a[row][col] = rand() % 10;
+        if (col == numUnknowns - 1)
+        {
+          b[row] = rand() % 10;
+        }
+      }
+    }
   }
 
+  auto begin_time = chrono::high_resolution_clock::now();
   for (int row = numUnknowns - 1; row >= 0; row--)
   {
     x[row] = b[row];
@@ -38,14 +59,18 @@ int getSolution()
       x[row] -= a[row][col] * x[col];
     x[row] /= a[row][row];
   }
+  auto end_time = std::chrono::high_resolution_clock::now();
 
-  cout << endl
-       << "Solution: " << endl;
-  for (int row = 0; row < numUnknowns; row++)
+  if (numUnknowns <= 5)
   {
-    cout << "x[" << row << "] = " << x[row] << endl;
+    cout << endl
+         << "Solution: " << endl;
+    for (int row = 0; row < numUnknowns; row++)
+    {
+      cout << "x[" << row << "] = " << x[row] << endl;
+    }
   }
-
+  cout << "\ntime taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   return (0);
 }
 
