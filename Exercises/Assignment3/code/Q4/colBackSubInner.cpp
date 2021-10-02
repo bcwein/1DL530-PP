@@ -58,7 +58,7 @@ int getSolution()
   for (int col = numUnknowns - 1; col >= 0; col--)
   {
     x[col] /= a[col][col];
-#pragma omp parallel 
+#pragma omp parallel
     {
 #pragma omp master
       numThreads = omp_get_num_threads();
