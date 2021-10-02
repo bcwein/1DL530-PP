@@ -5,13 +5,13 @@ In this task we were asked to rewrite our implementation of the \textit{Sieve of
   \item Step one of this task was to remove any references to posix threads (this included thread creation, locks and joins). 
   \item Step two was then to implement OpenMP by using specific OpenMP constructs such as:
   \begin{itemize}
-    \item #pragma omp parallel num_threads(numThreads) - with the number of requested threads as a command line argument 
-    \item #pragma omp single - to run the serial initiation of the seeds 
-    \item #pragma omp for - to split up the workload between the threads in an as even fashion as possible
+    \item \#pragma omp parallel num\_threads(numThreads) - with the number of requested threads as a command line argument 
+    \item \#pragma omp single - to run the serial initiation of the seeds 
+    \item \#pragma omp for - to split up the workload between the threads in an as even fashion as possible
   \end{itemize}
   \item Step three was to compile and test the code, and finally compare results 
 \end{itemize}
-Note that one could have set the number of requested threads using the environment variable \textit{OMP_NUM_THREADS}, 
+Note that one could have set the number of requested threads using the environment variable \textit{OMP\_NUM\_THREADS}, 
 however to stay true to the implementation of the original code it was decided to set it explicitly using a command-line argument.
 
 For the complete implementation please see the attached code file \textit{sieve.cpp}
