@@ -63,7 +63,7 @@ int getSolution()
 #pragma omp master
       numThreads = omp_get_num_threads();
 
-#pragma omp for
+#pragma omp for schedule(runtime)
       for (int row = 0; row < col; row++)
         x[row] -= a[row][col] * x[col];
     }
@@ -84,6 +84,7 @@ int getSolution()
     }
   }
   cout << "\nnumber of threads: " << numThreads;
+  cout << "\nnumber of variables: " << numUnknowns;
   cout << "\ntime taken: " << chrono::duration<double, std::milli>(end_time - begin_time).count() << " ms\n";
   return (0);
 }

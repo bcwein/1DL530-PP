@@ -52,22 +52,13 @@ int getSolution()
   }
 
   auto begin_time = chrono::high_resolution_clock::now();
-  for (int row = numUnknowns - 1; row >= 0; row--)
-  {
+  for (int row = 0; row < numUnknowns; row++)
     x[row] = b[row];
-
-#pragma omp parallel default(shared)
-    {
-#pragma omp master
-      numThreads = omp_get_num_threads();
-#pragma omp for
-      for (int col = row + 1; col < numUnknowns; col++)
-      {
-        x[row] -= a[row][col] * x[col];
-      }
-    }
-
-    x[row] /= a[row][row];
+  for (int col = numUnknowns - 1; col >= 0; col--)
+  {
+    x[col] /= a[col][col];
+    for (int row = 0; row < col; row++)
+      x[row] -= a[row][col] * x[col];
   }
   auto end_time = std::chrono::high_resolution_clock::now();
 
@@ -81,6 +72,7 @@ int getSolution()
       {
         cout << "x[" << row << "] = " << x[row] << endl;
       }
+      return 1;
     }
   }
   cout << "\nnumber of threads: " << numThreads;

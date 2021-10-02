@@ -1,0 +1,16 @@
+
+number of threads: 0
+number of variables: 3
+time taken: 0.00100 ms
+
+number of threads: 0
+number of variables: 100
+time taken: 0.08100 ms
+
+number of threads: 0
+number of variables: 1000
+time taken: 4.88500 ms
+
+number of threads: 0
+number of variables: 10000
+time taken: 498.44500 ms

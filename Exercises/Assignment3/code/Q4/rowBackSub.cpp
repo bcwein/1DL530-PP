@@ -55,18 +55,8 @@ int getSolution()
   for (int row = numUnknowns - 1; row >= 0; row--)
   {
     x[row] = b[row];
-
-#pragma omp parallel default(shared)
-    {
-#pragma omp master
-      numThreads = omp_get_num_threads();
-#pragma omp for
-      for (int col = row + 1; col < numUnknowns; col++)
-      {
-        x[row] -= a[row][col] * x[col];
-      }
-    }
-
+    for (int col = row + 1; col < numUnknowns; col++)
+      x[row] -= a[row][col] * x[col];
     x[row] /= a[row][row];
   }
   auto end_time = std::chrono::high_resolution_clock::now();
