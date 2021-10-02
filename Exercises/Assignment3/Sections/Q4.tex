@@ -90,9 +90,22 @@ Additionally once parallelized, we were asked to then gauge performance of our s
     % INSERT colrow.png
 
 \subsection{OpenMP Schedulers}
-  This section documents our experimentation when running both the row-based solution and column-based solutions for 2,4,8 & 16 threads, with a constant number of variables (42000) 
-  against the different OpenMP Schedulers
-  % INSERT row42000.png
+  This section documents our experimentation when running both the column-based solutions for 16 threads, with 42000 variables against the different OpenMP Schedulers
+  \begin{lstlisting}[language=bash]
+    #!/bin/bash
+    set -eo pipefail
+
+    for s in {static,dynamic,guided,auto}; do
+        export OMP_SCHEDULE=$s
+        filename="results_col_$OMP_SCHEDULE.txt"
+        set +e
+        rm $filename
+        set -e
+        OMP_NUM_THREADS=16 ./$PROG -u 42000 >> $filename
+    done
+  \end{lstlisting}
   % INSERT col42000.png 
 
-  
+  As we can see schedule type \textbf{auto} performed the best for this particular application resulting in an average increase of \textit{XXX} per thread. 
+  With schedule type \textbf{dynamic} performing the worst. 
+  This would track as the amount of work per iteration is vastly variable, and therefore a more generic slicing up of iteration per thread would on average perform the best.
