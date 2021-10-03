@@ -10,22 +10,24 @@ static void show_usage(std::string name)
        << "\t-h,--help\t\t\tShow this help message\n"
        << "\t-d,--dim\tREQUIRED\tSpecify dimensions of arrays\n"
        << "\t-t,--threads\tREQUIRED\tSpecify no of threads\n"
+       << "\t-p,--parallel\tREQUIRED\tSpecify no of loops to parallelise (MAX 3)\n"
        << std::endl;
 }
 
 int main(int argc, char* argv[]) 
 {
-    if (argc != 3)
+    if (argc != 3)                                  // Show usage
     {
         show_usage(argv[0]);
         return 1;
     }
-	double time;			                        //variables for timing
+
+	double time;			                        // Variables for timing
 	struct timeval ts, tf;
 
     int i, j, k;
     int dim = atoi(argv[1]);                        // Initialise dimensions
-    int numThreads = atoi(argv[2]);
+    int numThreads = atoi(argv[2]);                 // Number of threads     
 
     double** a = new double*[dim];
     double** b = new double*[dim];
@@ -55,7 +57,7 @@ int main(int argc, char* argv[])
 
     #pragma omp parallel num_threads(numThreads) default(shared) private(i, j, k)
     {
-        #pragma omp for collapse(3) schedule(static)
+        #pragma omp for schedule(static)
         for (i = 0; i < dim; i++)
             for (j = 0; j < dim; j++)
                 for (k = 0; k < dim; k++)
