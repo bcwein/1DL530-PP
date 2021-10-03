@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
     }
     gettimeofday(&ts,NULL);
 
-    #pragma omp parallell num_threads(numThreads) default(private) shared(a, b, c, dim)
+    #pragma omp parallel num_threads(numThreads) default(shared) private(i, j, k)
     {
         #pragma omp for collapse(3) schedule(static)
         for (i = 0; i < dim; i++)
