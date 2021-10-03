@@ -1,0 +1,40 @@
+(1,200)
+Matmul: Size 200 Time 0.105136
+(1,400)
+Matmul: Size 400 Time 0.787021
+(1,800)
+Matmul: Size 800 Time 10.449524
+(1,1000)
+Matmul: Size 1000 Time 21.597027
+(2,200)
+Matmul: Size 200 Time 0.046588
+(2,400)
+Matmul: Size 400 Time 0.393836
+(2,800)
+Matmul: Size 800 Time 4.900200
+(2,1000)
+Matmul: Size 1000 Time 10.880558
+(4,200)
+Matmul: Size 200 Time 0.036727
+(4,400)
+Matmul: Size 400 Time 0.251165
+(4,800)
+Matmul: Size 800 Time 2.763245
+(4,1000)
+Matmul: Size 1000 Time 5.472057
+(8,200)
+Matmul: Size 200 Time 0.022946
+(8,400)
+Matmul: Size 400 Time 0.185112
+(8,800)
+Matmul: Size 800 Time 1.699696
+(8,1000)
+Matmul: Size 1000 Time 3.310427
+(16,200)
+Matmul: Size 200 Time 0.021041
+(16,400)
+Matmul: Size 400 Time 0.143644
+(16,800)
+Matmul: Size 800 Time 1.229086
+(16,1000)
+Matmul: Size 1000 Time 2.621264
