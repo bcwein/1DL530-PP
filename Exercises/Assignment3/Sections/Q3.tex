@@ -1,0 +1,27 @@
+\section{Q3: Matrix Multiplication}
+
+As in Conway's Game of Life, in this task we have been provided code to parellelise.
+In this case, it is a matrix multiplication. Given a $m \times n$ matrix $A$ and
+a $n \times p$ matrix $B$. $AB = C$ where $C$ is an $m \times p$ matrix. Each value
+of c is calculated as follows:
+
+\begin{equation}
+    c_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}
+\end{equation}
+
+Where $i = 1, \dots, m$ and $j = 1, \dots, p$. This will require that our code 
+has three loops to calulate all values of $C$. These three nested for loops 
+is what we want to parallelise and we have done it as shown in the listing below.
+
+\begin{lstlisting}[language=C++]
+    #pragma omp parallel num_threads(numThreads) default(shared) private(i, j, k)
+    {
+        #pragma omp for schedule(static)
+        for (i = 0; i < dim; i++)
+            for (j = 0; j < dim; j++)
+                for (k = 0; k < dim; k++)
+                    c[i][j] += a[i][k] * b[k][j];
+    }
+\end{lstlisting}
+
+We tried to collapse the three for loops 
