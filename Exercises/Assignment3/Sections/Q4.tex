@@ -24,19 +24,22 @@ Additionally once parallelized, we were asked to then gauge performance of our s
   
   
   We can however parallelize the inner-loop safely, as we know that the value of \textit{col} is set to \textit{row+1}. And since the outer-loop is being run 
-  serially counting down from \textit{numThreads}, the value of \textit{x[col]} is constant. In addition, the operation being run in the inner-loop on the shared variable x
-  is only subtraction, and this does not rely on an order-of-operation (e.g $5-10-2$ is equal to $-2-10--5$) and therefore is thread-safe. 
-  
+  serially counting down from \textit{numThreads}, the value of \textit{x[col]} is constant.   
+  In addition, by splitting the assignment of \textit{x[row]} from the heavy calculation \textit{a[row][col] * x[col]}, we can ensure that there are no race conditions by wrapping 
+  \textit{x[row]-= diff} with an \textit{#pragma omp atomic}
+
   An implementation of this can be seen below:
   \begin{lstlisting}[language=C++]
     for (int row = numUnknowns - 1; row >= 0; row--)
     {
       x[row] = b[row];
       #pragma omp parallel for default(shared)
-      for (int col = row + 1; col < numUnknowns; col++)
-      {
-        x[row] -= a[row][col] * x[col];
-      }
+        for (int col = row + 1; col < numUnknowns; col++)
+        {
+          double diff = a[row][col] * x[col];
+          #pragma omp atomic
+          x[row] -= diff;
+        }
       x[row] /= a[row][row];
     }
   \end{lstlisting}
@@ -61,8 +64,7 @@ Additionally once parallelized, we were asked to then gauge performance of our s
 
 
   We can however parallelize the inner-loop safely, as we know that the value of \textit{col} is constant as \textit{row} is always less than \textit{col}, thus \textit{x[col]} is never changed.
-  In addition, the operation being run in the inner-loop on the shared variable x is only subtraction, and this does not rely on an order-of-operation (e.g $5-10-2$ is equal to $-2-10--5$) and 
-  therefore is thread-safe. 
+  In addition, since \textit{row} is the inner-looper iterator, there are not data-races when updating \textit{x[row]}, thus no atomic pragma is required.
 
   An implementation of this can be seen below:
   \begin{lstlisting}[language=C++]
@@ -92,7 +94,7 @@ Additionally once parallelized, we were asked to then gauge performance of our s
     However, when we get to 10000 number of variables, we see that the row-based solution still increasing in time as the number of threads are added.
     This is in contrast to the column-based solution which practically halves in time as the number of threads double.
     A possible reason for this is that even though the inner-loop of the row-based solution has been parallelized, there exists a substantial calculation (namely \textit{x[row] /= a[row][row];})
-    is still being done serially. See figure \ref{fig:rowcol}.
+    is still being done serially in addition to the atomic portion of the inner-loop. See figure \ref{fig:rowcol}.
     \begin{figure}
       \centering
       \includegraphics[width=\linewidth]{Figures/rowcol.png}
@@ -115,7 +117,6 @@ Additionally once parallelized, we were asked to then gauge performance of our s
         OMP_NUM_THREADS=16 ./$PROG -u 42000 >> $filename
     done
   \end{lstlisting}
-  % INSERT col42000.png 
   \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{Figures/col42000.png}
