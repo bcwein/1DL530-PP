@@ -27,7 +27,7 @@ Matmul: Size 200 Time 0.023340
 (8,400)
 Matmul: Size 400 Time 0.186766
 (8,800)
-Matmul: Size 800 Time 1.597834
+Matmul: Size 800 Time 0.5978341
 (8,1000)
 Matmul: Size 1000 Time 3.457811
 (16,200)
