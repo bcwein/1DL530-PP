@@ -23,16 +23,42 @@ The code is also far safer as it is easier to understand. And the written implem
 \subsection{Results}
 All results are from the \textit{vitsippa.it.uu.se} system.
 
-As per previous tests, we can see that for small max numbers (10 or 100), the overhead of threads actually increases the amount of time taken to compute the results 
-{INSERT GRAPH HERE}
-However as we hit medium max numbers (1000000 or 10000000), we already see an approx 50\% reduction of time as we increase number of threads
-{INSERT GRAPH HERE}
-And as we hit large max numbers we see that we have hit 50\% reduction per addition of threads 
-{INSERT GRAPH HERE}
+As per previous tests, we can see that for small max numbers (10 or 100), the overhead of threads actually increases the amount of time taken to compute the results.
+This is shown in figure \ref{fig:sieve10100}. However as we hit medium max numbers (1000000 or 10000000), we already see an approx 50\% reduction of time as we increase number of threads.
+This is shown in figure \ref{fig:sieve100000010000000}. 
+And as we hit large max numbers we see that we have hit 50\% reduction per addition of threads.
+This is shown in figure \ref{fig:sieve90000000}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Figures/results_small.png}
+  \caption{Sieve of Eratosthenes with max number $10$ and $100$.}
+  \label{fig:sieve10100}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Figures/results_med.png}
+  \caption{Sieve of Eratosthenes with max number $10^6$ and $10^7$.}
+  \label{fig:sieve100000010000000}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Figures/results_large.png}
+  \caption{Sieve of Eratosthenes with max number $9\times10^7$.}
+  \label{fig:sieve90000000}
+\end{figure}
+
 This time decrease hits substantially as we break into larger numbers as we overcome the overhead that parallelizing the application adds (and thus can take advantage of the threads)
-
-\textit{note: the difference between 8 and 16 threads are nominal, this indicates that the system was unable to give us a full 16 threads at testing time, however should we have gotten them, we would expect to see a full 50\% reduction in time}
-
+\textit{Note: the difference between 8 and 16 threads are nominal, this indicates that the system was unable to give us a full 16 threads at testing time, however should we have gotten them, we would expect to see a full 50\% reduction in time}
 Interestingly if we compare the runs of the Posix version to the OpenMP, we see a significant reduction in times (almost 75\%). 
 This is likely due to the less overhead OpenMP adds to parallelize the application vs our implementation Posix threads (with the additional functions and jumps).
-{INSERT GRAPH HERE}
+See figure \ref{fig:sievePosixVsOpenMp}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Figures/posixVsOpenMP.png}
+  \caption{Posix Threads vs OpenMP.}
+  \label{fig:sievePosixVsOpenMp}
+\end{figure}

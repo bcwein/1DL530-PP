@@ -26,7 +26,7 @@ Additionally once parallelized, we were asked to then gauge performance of our s
   We can however parallelize the inner-loop safely, as we know that the value of \textit{col} is set to \textit{row+1}. And since the outer-loop is being run 
   serially counting down from \textit{numThreads}, the value of \textit{x[col]} is constant.   
   In addition, by splitting the assignment of \textit{x[row]} from the heavy calculation \textit{a[row][col] * x[col]}, we can ensure that there are no race conditions by wrapping 
-  \textit{x[row]-= diff} with an \textit{#pragma omp atomic}
+  \textit{x[row]-= diff} with an \textit{\#pragma omp atomic}
 
   An implementation of this can be seen below:
   \begin{lstlisting}[language=C++]
