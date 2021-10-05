@@ -63,7 +63,9 @@ int getSolution()
 #pragma omp for
       for (int col = row + 1; col < numUnknowns; col++)
       {
-        x[row] -= a[row][col] * x[col];
+        double diff = a[row][col] * x[col];
+#pragma omp atomic
+        x[row] -= diff;
       }
     }
 
