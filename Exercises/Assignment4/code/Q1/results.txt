@@ -1,0 +1,8 @@
+MaxNumber - 90000000
+
+Send/Receive single machine:
+
+
+Send/Receive three machine:
+
+Broadcast/Reduce three machine:
