@@ -1,8 +1,13 @@
 MaxNumber - 90000000
 
 Send/Receive single machine:
-
+total number of primes < 90000000 : 5216954
+time taken: 5598.57 ms
+number of processes: 32
 
 Send/Receive three machine:
+total number of primes < 90000000 : 5216954
+time taken: 1947.83 ms
+number of processes: 96
 
 Broadcast/Reduce three machine:
