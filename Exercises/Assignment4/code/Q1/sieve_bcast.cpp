@@ -9,19 +9,17 @@
 using namespace std;
 
 int myID, numProcs;
+long long maxNumber = 90000000;
 
 int numSeeds = 0;
 int countPrimes = 0;
 
 long long sqrtNumber;
-long long maxNumber = 90000000;
 int *results = (int *)malloc(sizeof(int) * maxNumber + 1);
-int *seeds;
+int *seeds = (int *)malloc(sizeof(int) * maxNumber);
 
-int *getSeeds(int startNumber, long maxNumber)
+void getSeeds(int startNumber, long maxNumber)
 {
-  int *tempSeeds = (int *)malloc(sizeof(int) * maxNumber);
-
   for (int i = startNumber; i <= maxNumber; i++)
   {
     if (results[i] == 1)
@@ -34,15 +32,15 @@ int *getSeeds(int startNumber, long maxNumber)
       results[j * i] = 1;
     }
     // cout << i << "\n";
-    tempSeeds[numSeeds++] = i;
+    seeds[numSeeds++] = i;
   }
-
-  return tempSeeds;
 }
 
 int main(int argc, char *argv[])
 {
   MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &myID);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
 
   auto begin_time = chrono::high_resolution_clock::now();
   if (myID == 0)
@@ -50,12 +48,13 @@ int main(int argc, char *argv[])
     // mark initials
     results[1] = 1;
     sqrtNumber = (long long)(floor(sqrt(maxNumber)));
-    seeds = getSeeds(2, sqrtNumber);
-    MPI_Bcast(seeds, numSeeds, MPI_INT, myID, MPI_COMM_WORLD);
+    getSeeds(2, sqrtNumber);
   }
 
-  MPI_Comm_rank(MPI_COMM_WORLD, &myID);
-  MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+  MPI_Bcast(seeds, maxNumber, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(results, maxNumber + 1, MPI_INT, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&sqrtNumber, 1, MPI_LONG_LONG, 0, MPI_COMM_WORLD);
+  MPI_Bcast(&numSeeds, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
   long long checkNumbers = maxNumber - sqrtNumber;
 
