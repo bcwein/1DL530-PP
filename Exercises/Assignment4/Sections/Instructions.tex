@@ -1,0 +1,37 @@
+\section{Instructions}
+
+For compiling the code that was provided in the assignment as well as the 
+code that was edited for solving the exercises, the makefile provided was used.
+
+We have used \textit{gullviva.it.uu.se} for checking that the code runs.
+The code is structured in the following way:
+
+\begin{itemize}
+    \item Q1
+    \begin{itemize}
+        \item hosts
+        \item Makefile
+        \item results.text
+        \item sieve\_bcast.cpp
+        \item sieve.cpp
+    \end{itemize}
+\end{itemize}
+
+The makefile has several commands. If you want to compile the program:
+
+\begin{center}
+    \textit{Make PROG=\textbf{filename}}
+\end{center}
+
+Where \textit{\textbf{filename}} is the name of the C/C++ file to compile. If 
+you want to run the code locally on one machine. Use the command
+
+\begin{center}
+    \textit{Make run-local PROG=\textbf{filename}}
+\end{center}
+
+If you want to run it on all three machines in the hostfile, use the command
+
+\begin{center}
+    \textit{Make run PROG=\textbf{filename}}
+\end{center}
