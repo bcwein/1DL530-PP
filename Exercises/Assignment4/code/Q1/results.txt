@@ -11,3 +11,6 @@ time taken: 1947.83 ms
 number of processes: 96
 
 Broadcast/Reduce three machine:
+total number of primes < 90000000 : 5216954
+time taken: 1935.82 ms
+number of processes: 96
