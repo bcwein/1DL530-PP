@@ -3,13 +3,13 @@
 #
 
 all: 
-	mpic++ -Wall ${PROG}.cpp -o ${PROG}
+	mpic++ -Wall -std=c++0x ${PROG}.cpp -o ${PROG}
 
 run: 
 	mpiexec --hostfile hosts ${PROG}         
 
 run-local: 
-	mpiexec  -n 4 ${PROG}
+	mpiexec -n 4 ${PROG}
 
 clean:
 	$(RM) ${PROG}
