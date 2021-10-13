@@ -9,19 +9,17 @@
 using namespace std;
 
 int myID, numProcs;
+long long maxNumber = 90000000;
 
 int numSeeds = 0;
 int countPrimes = 0;
-int *seeds;
+int *seeds = (int *)malloc(sizeof(int) * maxNumber);
 
 long long sqrtNumber;
-long long maxNumber = 90000000;
 int *results = (int *)malloc(sizeof(int) * maxNumber + 1);
 
 void getSeeds(int startNumber, long maxNumber)
 {
-  int *tempSeeds = (int *)malloc(sizeof(int) * maxNumber);
-
   for (int i = startNumber; i <= maxNumber; i++)
   {
     if (results[i] == 1)
@@ -35,19 +33,15 @@ void getSeeds(int startNumber, long maxNumber)
     }
     countPrimes++;
     // cout << i << "\n";
-    tempSeeds[numSeeds++] = i;
-  }
-
-  seeds = (int *)malloc(sizeof(int) * numSeeds);
-  for (int k = 0; k < numSeeds; k++)
-  {
-    seeds[k] = tempSeeds[k];
+    seeds[numSeeds++] = i;
   }
 }
 
 int main(int argc, char *argv[])
 {
   MPI_Init(&argc, &argv);
+  MPI_Comm_rank(MPI_COMM_WORLD, &myID);
+  MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
 
   auto begin_time = chrono::high_resolution_clock::now();
   if (myID == 0)
@@ -56,10 +50,21 @@ int main(int argc, char *argv[])
     results[1] = 1;
     sqrtNumber = (long long)(floor(sqrt(maxNumber)));
     getSeeds(2, sqrtNumber);
+    for (int i = 1; i < numProcs; i++)
+    {
+      MPI_Send(&sqrtNumber, 1, MPI_LONG_LONG, i, myID, MPI_COMM_WORLD);
+      MPI_Send(&numSeeds, 1, MPI_INT, i, myID, MPI_COMM_WORLD);
+      MPI_Send(seeds, maxNumber, MPI_INT, i, myID, MPI_COMM_WORLD);
+      MPI_Send(results, maxNumber + 1, MPI_INT, i, myID, MPI_COMM_WORLD);
+    }
   }
-
-  MPI_Comm_rank(MPI_COMM_WORLD, &myID);
-  MPI_Comm_size(MPI_COMM_WORLD, &numProcs);
+  else
+  {
+    MPI_Recv(&sqrtNumber, 1, MPI_LONG_LONG, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(&numSeeds, 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(seeds, maxNumber, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+    MPI_Recv(results, maxNumber + 1, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+  }
 
   long long checkNumbers = maxNumber - sqrtNumber;
 
