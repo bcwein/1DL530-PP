@@ -30,7 +30,16 @@ When comparing to the PThread implementation, using MPI was far easier to write.
 However using OpenMP far exceeds MPI in ease-of-use, readability and code-length.
 
 \subsection*{Results}
-As seen in {mpi\_SINGLE}, running the MPI implementation on a single machine far 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{Figures/mpi_SINGLE.png}
+  \caption{Sieve of Eratosthenes with max number $9\times10^7$ on different
+  implementations.}
+  \label{fig:sievesingle}
+\end{figure}
+
+As seen in figure\ref{fig:sievesingle}, running the MPI implementation on a single machine far 
 outstripped our initial PThread version with about a ~50\% reduction in time.
 However when compared to the OpenMP implementation, we see that the MPI version 
 is slightly slower. This seems to be likely due to the manual calculation of the 

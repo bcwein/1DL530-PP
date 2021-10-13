@@ -21,7 +21,15 @@ readability and code-length.
 
 \subsection*{Results}
 
-As seen in {mpi\_BCAST}, running the MPI implementation with `Broadcast` and 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/mpi_Bcast.png}
+    \caption{Sieve of Eratosthenes with max number $9\times10^7$ on different
+    implementations.}
+    \label{fig:sievebcast}
+\end{figure}
+
+As seen in figure \ref{fig:sievebcast}, running the MPI implementation with `Broadcast` and 
 `Reduce`, we see no noticeable slow-down or speed-up between the two 
 implementations. This is most likely as our application does very little at 
 send/receive or reduce time, therefore there would be no noticeable speed-up 

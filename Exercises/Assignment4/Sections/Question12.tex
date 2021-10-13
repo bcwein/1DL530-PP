@@ -7,7 +7,15 @@ speed-up/slow-down when compared to previous implementations.
 
 \subsection*{Results}
 
-As seen in {mpi\_MULTI}, running the MPI implementation on multi-machines far 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{Figures/mpi_MULTI.png}
+    \caption{Sieve of Eratosthenes with max number $9\times10^7$ on different
+    implementations.}
+    \label{fig:sievemulti}
+\end{figure}
+
+As seen in figure \ref{fig:sievemulti}, running the MPI implementation on multi-machines far 
 outstripped our initial PThread version and OpenMP implementations.
 This makes sense as we are now exploiting 3x the amount of cores we previously had.
 Interestingly even though we now utilized 3x the amount of cores, we only saw a 
