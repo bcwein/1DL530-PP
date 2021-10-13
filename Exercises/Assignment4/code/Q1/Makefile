@@ -9,7 +9,7 @@ run:
 	mpiexec --hostfile hosts ${PROG}         
 
 run-local: 
-	mpiexec -n 4 ${PROG}
+	mpiexec -n 32 ${PROG}
 
 clean:
 	$(RM) ${PROG}
